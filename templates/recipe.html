@@ -1,0 +1,51 @@
+{% import "macros/page.html" as page_macros %}
+{% extends "index.html" %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block content %}
+
+<article class="recipe">
+    <header>
+        <h1>{{ page.title }}</h1>
+    </header>
+    <div class="content">
+        <div class="ingredients">
+            {% if page.extra.tools %}
+            <b>Tools Needed</b>
+            {% for tool in page.extra.tools %}
+            <li> {{ tool }}</li>
+            {% endfor %}
+            <br />
+            {% endif %}
+
+            <b>Ingredients</b>
+            {% for ing in page.extra.ingredients %}
+            <li>{{ ing }}</li>
+            {% endfor %}
+        </div>
+
+        <div class="instructions">
+            {{ page.content | safe }}
+        </div>
+    </div>
+
+    {% if page.assets %}
+    <script>
+        lightGallery(document.getElementById('lightgallery'));
+    </script>
+
+    <div id="lightgallery">
+        {% for asset in page.assets %}
+        <a href="{{ get_url(path=asset) }}">
+              <img src="{{ resize_image(path=asset, width=128, height=128, op="fill") }}" />
+        </a>
+        {% endfor %}
+    </div>
+    {% endif %}
+        
+
+    {{ page_macros::page_info(page=page) }}
+</article>
+
+{% endblock content %}
