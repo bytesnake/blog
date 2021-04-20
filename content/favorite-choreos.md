@@ -30,6 +30,8 @@ classic, tons of variations, good for circles
 
 {{ youtube(id="nCNVYvDDkts") }}
 
-## Missing
+## Little Brown Jug
 
-I couldn't find a video of this on the internet, but a portuguese guy taught it through an online course. May add it later.
+I couldn't find a recorded video of the choreography, but a portuguese guy taught it through an online course. The song is called `Little Brown Jug`
+
+{{ youtube(id="YOG89TrL4Vk") }}
