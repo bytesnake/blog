@@ -81,6 +81,23 @@ The special marks are:
 
  * you can fast switch between open buffers with `CTRL 6`
 
+Another useful thing for buffers is the use of automatically splitting when
+open a new buffer. By prepending `s` before a buffer command a new split is
+automatically created. Other commands I didn't know:
+
+ * use `:bf` to jump to first buffer
+ * use `:bl` to jump to last buffer
+ * use `:ba` to open all buffers in splitted screens
+ * use `:ls` to list all buffer, e.g. unlisted ones too
+
+Let say you want to filter you buffer list for a specific file name, then
+you can use:
+```
+:filter juggle ls
+```
+
+to filter for all files with the `juggle` pattern.
+
 ## Folding
 
 You can collapse items with the operator `zf`. It accepts paragraphs, lines and words.
