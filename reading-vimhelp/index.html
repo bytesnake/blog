@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+
+    <title>Reading the vim help files</title>
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;main.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;recipe.css">
+    <link rel="stylesheet" href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;lightgallery.min.css">
+
+    <script src="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;lightgallery.min.js"></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog"></a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;recipes">Recipes</a>
+                
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Reading the vim help files</h1>
+    </header>
+    <div class="content">
+        <p>I thought that I should improve my vim skills this morning and started by reading the vim help pages. I skimmed them in the past a couple of times, but actually learned most of the keys by doing.</p>
+<span id="continue-reading"></span>
+<p>My motivation was improving the <code>gf</code> command, which automatically opens the file under the cursor in a new buffer. Normally this fails if the file does not exists, but can be remapped with <code>noremap gf :e &lt;cfile&gt;&lt;cr&gt;</code>. I then tried to create a group for auto-creating a subfolder where the current buffer path points and found the following snippets:</p>
+<pre style="background-color:#2b303b;">
+<code class="language-vim" data-lang="vim"><span style="color:#65737e;">&quot; create mkdir group and bind :M to it
+</span><span style="color:#b48ead;">augroup</span><span style="color:#c0c5ce;"> Mkdir
+  </span><span style="color:#96b5b4;">autocmd</span><span style="color:#c0c5ce;">!
+  </span><span style="color:#96b5b4;">autocmd</span><span style="color:#c0c5ce;"> BufWritePre </span><span style="color:#b48ead;">*</span><span style="color:#c0c5ce;"> call </span><span style="color:#8fa1b3;">mkdir</span><span style="color:#c0c5ce;">(</span><span style="color:#8fa1b3;">expand</span><span style="color:#c0c5ce;">(</span><span style="color:#a3be8c;">&quot;&lt;afile&gt;:p:h&quot;</span><span style="color:#c0c5ce;">), </span><span style="color:#a3be8c;">&quot;p&quot;</span><span style="color:#c0c5ce;">)
+</span><span style="color:#b48ead;">augroup</span><span style="color:#c0c5ce;"> END
+
+</span><span style="color:#96b5b4;">command</span><span style="color:#c0c5ce;"> M call </span><span style="color:#8fa1b3;">mkdir</span><span style="color:#c0c5ce;">(</span><span style="color:#8fa1b3;">expand</span><span style="color:#c0c5ce;">(</span><span style="color:#a3be8c;">&quot;%:p:h&quot;</span><span style="color:#c0c5ce;">), </span><span style="color:#a3be8c;">&quot;p&quot;</span><span style="color:#c0c5ce;">)
+</span></code></pre>
+<p>This works with <code>:M</code> now, but I can't combine it by doing <code>:Me &lt;cfile&gt;&lt;cr&gt;</code> 😕 I then thought that I need to learn more of vim and am looking now at the help pages. Looking at the page <a href="https://vimhelp.org/usr_02.txt.html#usr_02.txt">vimhelp/usr_02.txt.html</a> shows a really insightful and useful way of teaching.</p>
+<p>This is a simp!!!</p>
+<h2 id="learned-modifiers">Learned modifiers</h2>
+<ul>
+<li>use <code>J</code> to join the current and next line</li>
+<li>replace last character with combination <code>$ x a</code>, different to what I'm used to by doing <code>A &lt;backspace&gt;</code></li>
+<li>use <code>~</code> to change the case of a character and move to the next one</li>
+</ul>
+<h3 id="using-counts">Using counts</h3>
+<p>I used counts before for search with <code>f</code>/<code>F</code>, but you can actually use it for navigating and repeating written stuff as well.</p>
+<p>You can use <code>9A !&lt;ESC&gt;</code> to write nine times the exclamation mark at the end of the line.
+You can use <code>3o Repeat&lt;ESC&gt;</code> to create three lines with &quot;Repeat&quot; written
+You can navigate to the third line under the cursor with <code>3j</code>
+You can jump to the end of the third line with <code>3$</code></p>
+<p>The cool thing about the last discovery is that I can use that in my web-browser as well, because I'm using a vim plugin xD</p>
+<h3 id="forward-search-for-matching-pair">Forward search for matching pair</h3>
+<p>The <code>%</code> modifier will search for the matching pair of a bracket. For example a expression like <code>(a == (b * c) / d)</code> will cause <code>%</code> under the first character to jump the last character, which is the matching pair :)</p>
+<p>This is especially useful in visual mode to select everything between brackets.</p>
+<h2 id="navigating">Navigating</h2>
+<p>I previously used <code>:35</code> to jump into the 35th line, but with counts you I can also just do <code>35G</code></p>
+<p>Relative jumps may also become handy if you are seeing a line at the beginning and you want to jump there, you can do:</p>
+<ul>
+<li><code>H</code> for jumping at the beginning of the page</li>
+<li><code>M</code> for jumping to the middle</li>
+<li><code>L</code> for jumping to the end</li>
+</ul>
+<p>If you doing jumps in the text, you can reverse those jumps with <code>CTRL-O</code> or repeat them with <code>CTRL-I</code>. The latter on does not work in my configuration and I have no clue why :D</p>
+<h3 id="centering-the-current-line">Centering the current line</h3>
+<p>You can bring the current line to the top, middle or bottom of the screen with <code>zt</code>, <code>zz</code>, <code>zb</code>. During presentation or showing someone something inside of vim, it may be useful to hide unrelevant information above the current section.</p>
+<h3 id="using-marks">Using marks</h3>
+<p>Marks are a special syntax for remembering up to 26 (a-z) sections in your text. You can set a mark &quot;a&quot; with <code>ma</code> and then jump to the line with <code>'a</code>. With <code>''</code> you can jump to the last line, which is just a special mark &quot;'&quot; you can see in the whole list at <code>:marks</code></p>
+<p>The special marks are:</p>
+<ul>
+<li>&quot;'&quot;: The cursor position before doing a jump</li>
+<li>&quot;&quot;&quot;: The cursor position when last editing the file</li>
+<li>&quot;[&quot;: Start of the last change</li>
+<li>&quot;]&quot;: End of the last change</li>
+</ul>
+<h2 id="searching">Searching</h2>
+<ul>
+<li>use <code>\&lt;</code> and <code>\&gt;</code> to mark the end of a word during searching</li>
+<li>use <code>#</code> to search <em>backward</em> for the current word under the cursor</li>
+</ul>
+<h2 id="buffers">Buffers</h2>
+<ul>
+<li>you can fast switch between open buffers with <code>CTRL 6</code></li>
+</ul>
+<p>Another useful thing for buffers is the use of automatically splitting when
+open a new buffer. By prepending <code>s</code> before a buffer command a new split is
+automatically created. Other commands I didn't know:</p>
+<ul>
+<li>use <code>:bf</code> to jump to first buffer</li>
+<li>use <code>:bl</code> to jump to last buffer</li>
+<li>use <code>:ba</code> to open all buffers in splitted screens</li>
+<li>use <code>:ls</code> to list all buffer, e.g. unlisted ones too</li>
+</ul>
+<p>Let say you want to filter you buffer list for a specific file name, then
+you can use:</p>
+<pre style="background-color:#2b303b;">
+<code><span style="color:#c0c5ce;">:filter juggle ls
+</span></code></pre>
+<p>to filter for all files with the <code>juggle</code> pattern.</p>
+<h2 id="folding">Folding</h2>
+<p>You can collapse items with the operator <code>zf</code>. It accepts paragraphs, lines and words.</p>
+<ul>
+<li><code>zf</code>: create a new fold at that position</li>
+<li><code>zo</code>: open the fold</li>
+<li><code>zc</code>: close the fold</li>
+<li><code>zr</code>: reduce the folding</li>
+<li><code>zm</code>: more folding</li>
+<li><code>zd</code>: delete folding</li>
+</ul>
+<p>To store and re-load the folds, use <code>:mkview</code> and <code>:loadview</code></p>
+
+    </div>
+
+    
+    <div class="article-info">
+        
+        <div class="article-date">28 March 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/vim/">#vim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+</article>
+
+
+        </main>
+        <footer>
+            <p>
+                ©  2021<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
