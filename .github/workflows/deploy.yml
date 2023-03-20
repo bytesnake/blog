@@ -8,6 +8,7 @@ jobs:
     steps:
       # Checkout
       - uses: actions/checkout@v2
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       # Build & deploy
       - name: Deploy to gh-pages branch
         uses: shalzz/zola-deploy-action@v0.14.1
