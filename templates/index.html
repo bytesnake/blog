@@ -6,9 +6,18 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
 
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <title>{{ config.title }}</title>
     <meta name="description" content="{{ config.description }}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
 
     <link rel="stylesheet" href="{{ get_url(path="main.css", trailing_slash=false) }}">
     <link rel="stylesheet" href="{{ get_url(path="recipe.css", trailing_slash=false) }}">
@@ -37,6 +46,12 @@
                 {% set link_url = menu_link.url | replace(from="$BASE_URL", to=config.base_url) %}
                 <a {% if current_url and current_url == link_url %}class="active"{% endif %} href="{{ link_url }}">{{menu_link.name}}</a>
                 {% endfor %}
+		<span class="socials">
+                {% for social in config.extra.social %}
+                {% set link_url = social.url %}
+		<a target="_blank" href="{{ link_url }}"><img height="28px" src="/{{ social.image }}" /></a>
+                {% endfor %}
+		</span>
                 {% endblock sidebar_nav %}
             </nav>
         </header>
