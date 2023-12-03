@@ -11,7 +11,7 @@
 
     <title>{{ config.title }}</title>
     <meta name="description" content="{{ config.description }}">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="{{ get_url(path="favicon.ico", trailing_slash=false) }}">
 
     <meta property="og:url"                content="https://lorenzschmidt.com" />
     <meta property="og:title"              content="Notes and Tones" />
@@ -49,7 +49,7 @@
 		<span class="socials">
                 {% for social in config.extra.social %}
                 {% set link_url = social.url %}
-		<a target="_blank" href="{{ link_url }}"><img height="28px" src="/{{ social.image }}" /></a>
+		<a target="_blank" href="{{ link_url }}"><img height="28px" src="{{ get_url(path=social.image, trailing_slash=false) }}" /></a>
                 {% endfor %}
 		</span>
                 {% endblock sidebar_nav %}
