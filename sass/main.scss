@@ -416,10 +416,35 @@ ul.language-select > li {
     header nav a {
         margin-left: 5%;
     }
+
+    header nav .socials {
+	margin-left: 5%;
+    }
 }
 
 .socials {
 	a:not(:first-child) {
 		margin-left: 0;
+	}
+}
+
+.me {
+	display: flex;
+	align-items: center;
+
+	img {
+		margin-right: 20px;
+	}
+}
+
+@media (max-width: 840px) {
+	.me {
+		display: inline;
+
+		img {
+			position: relative;
+			left: -25%;
+			margin-right: 0;
+		}
 	}
 }

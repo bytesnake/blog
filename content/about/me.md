@@ -4,8 +4,8 @@ date = "2023-11-27"
 draft = false
 +++
 
-<div class="me" style="display: flex; align-items: center;"> 
-    <img src="../../me.jpg" width="300px" height="330px" style="margin-right: 20px;"><span style=""><b>Hey, I'm Lorenz</b>
+<div class="me"> 
+    <img src="../../me.jpg" width="300px" height="330px"><span style=""><b>Hey, I'm Lorenz</b>
     <ul>
         <li> Research Interest: splitting methods, operator theory for signal processing, average-case analysis of iterations</li>
         <li> Past Software Projects: Vim, Rust</li>
