@@ -4,7 +4,15 @@ date = "2023-12-18"
 draft = true
 +++
 
-For my PhD studies my daily occupation shifted towards more connected work &ndash; opposed to the curriculum based master's studies. Reading large amount of literature became much more important without forgetting most of it after a month or two. Therefore I looked for a good solution for scientific note-taking.
+For my PhD studies my daily occupation shifted towards more connected work 
+&ndash; opposed to the curriculum based master's studies. Reading large amount 
+of literature became much more important without forgetting most of it after a
+month or two. Therefore I looked for a good solution for scientific note-taking.
+
+I work in two formats, the first is for project based literature review, while
+the second (the one in light here) for more long-term and independent connection
+storage. I will describe the second one, and give several arguments for its
+usefulness.
 
 <!-- more -->
 
@@ -45,11 +53,28 @@ the writing process, while making reading notes really hassle free.
  * create rich network of hyperlinks with support of Folgezettel (linear follow-up notes)
  * publish notes in a suitable format to read on the web
 
-## Connected Notetaking in LaTeX
+## A guide to connected notetaking
 
-I have been using LaTeX for a long time now and can't live with many features of its core and CTAN packages.
+After arguing for note-taking with microblogging features, I will describe how
+to setup a self-publishing repository with formulae and bibliography support.
+
+Mastodon has features making it useful for connected note-taking. Tags can be
+used for creating links between notes. Giving each note a unique identifier at
+the top and creating links from other notes in markdown format gives all
+advantages of a linking system. Furthermore the threading system of Mastodon
+allows easy view of parent or children notes and makes the linearized version
+effortless to do.
+
+Together with the social aspects and good viewing support on many platforms, it
+seems that this solution is a good tradeoff. Also Mastodon allows viewing
+the changelog of a toot over time and provides a more complete view on a single
+note.
 
 ## Converting to HTML with Tex4HT
+
+The first step is to setup a document to produce structured notes and use it for
+note-taking. After that we describe how to transcribe this document to HTML5
+with MathML support.
 
 As preliminary step towards the next section, we convert our TeX document to an HTML5 file. Formulae support with MathML is mandatory, as we can't use javascript libraries such as MathJax.
 
