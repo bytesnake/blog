@@ -1,6 +1,6 @@
 +++
 title = "A profound identity in signal processing"
-date = "2024-08-01"
+date = "2024-08-11"
 +++
 
 Arguably one of the most important identities in signal processing is the following theorem.
