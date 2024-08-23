@@ -41,4 +41,4 @@ bombadil install $HOME/.bombadil/
 # list all available profiles
 echo "Available profiles for bombadil"
 bombadil get profiles
-echo "\nSelect with bombadil link <profile>"
+printf "\n\n## Select with \`bombadil link <profile>\`\n"
