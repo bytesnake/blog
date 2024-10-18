@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+    <a style="display: none" rel="me" href="https://mastodon.social/@bytesnake">Mastodon</a>
+    <div class="container">
+        <header> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+                
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;sp-identity&#x2F;">A profound identity in signal processing</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>Arguably one of the most important identities in signal processing is the following theorem.</p>
+<div style="margin:0 auto;text-align:center">
+    <object data="/sp-identity/identity.svg" width="500"> </object>
+</div>
+<p>The identity is known as Moreau's decomposition and instantiates into useful applications for variational analysis, convex optimization and signal processing. This post will explain the symbolic meaning and implication of this theorem for signal processing.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">11 August 2024</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;rust-inference&#x2F;">Building standalone model binaries for audio inference</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>For a recent problem I had to crawl and categorize
+a large number of audio files from the internet.
+As the bottleneck was deemed to be downstream link
+I decided to use a pre-trained event
+classification model and run inference on the CPU.</p>
+<p>Another requirement was that the crawler were
+running on multiple server and consistent for
+several weeks. My choice of language for such
+infrastructure heavy task is Rust and I looked
+into ways how to deploy an inference model.</p>
+<p>It turned out that the process for creating a
+standalone binary in Rust is pretty simple. Even
+better, wrapping a model pre-trained on a large
+event classification dataset is possible.
+This means that in the end I could just copy the
+binary to any x86 machines and run them, without
+the need to setup virtual environments or install 
+any packages.</p>
+<p>In this post I will demonstrate how to convert a
+pre-trained model to ONNX and put it into a
+binary. Our goal is to create a standalone
+executable taking samples from stdin and
+classifying them into 527 known audio classes.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">10 August 2024</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;cauchyschwarz-masterclass&#x2F;">Doing proofs: The Cauchy-Schwarz Master Class</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>My favorite instructive math book I have read till now is
+the Cauchy-Schwarz Master Class written by Michael Steele et al.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">20 March 2023</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;favorite-web-vim&#x2F;">Reading and writing the web with Vim</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>Two features of the <a href="https://addons.mozilla.org/de/firefox/addon/tridactyl-vim/">Tridactyl</a> extension makes reading/writing the web much more relaxing for me. The most common
+element of Vim like extensions is link following with highlighted key-codes. This makes mouse pointing unecessary
+and reading workflow easier. (also don't forget to use the <code>g&lt;f|F&gt;</code> chain) But I find the visualized style of many
+websites too distracting and use Vim in those cases to construct an answer or dissect a thread.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date"> 7 October 2022</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;i3-mail&#x2F;">Preview unread&#x2F;total number of emails in i3status</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>I recently added a small section to my <code>i3status</code> bar with the number of unread emails and total emails. In order to avoid having thunderbird open all the time, I also added a wrapper which puts it into headless mode.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date"> 1 July 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;sombre-song&#x2F;">The price of the most distressing piece of music goes to ...</a>
+            </h1>
+        </header>
+
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">26 June 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/music/">#music</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;favorite-choreos&#x2F;">Some of my favorite choreos</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>Dancing was one of the things that kept me mentally sane in 2020. Because Lindy Hop is not possible at the moment, we shifted to choreographies and friends organized weekly meetings where we could meet online and learn them together.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">31 March 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/dancing/">#dancing</a></li>
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/swing/">#swing</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;reading-vimhelp&#x2F;">Reading the vim help files</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>I thought that I should improve my vim skills this morning and started by reading the vim help pages. I skimmed them in the past a couple of times, but actually learned most of the keys by doing.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">28 March 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/vim/">#vim</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;hello-world&#x2F;">Hello World!</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>This is the first post on a new blog I'm starting. The previous, purely technical, one is moved to a different URL and the focus of this one is on more personal stuff I'm interested in.</p>
+
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <div class="article-date">20 March 2021</div>
+        
+        <div class="article-taxonomies">
+            
+            
+                <ul class="article-tags">
+                    
+                    <li><a href="https://bytesnake.github.io/blog/tags/entry/">#entry</a></li>
+                    
+                </ul>
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                
+    <div class="pagination">
+        <div class="left pagination-item disabled">
+            
+        </div>
+        <div class="right pagination-item disabled">
+            
+        </div>
+    </div>
+
+                
+            
+        </main>
+        <footer>
+            <p>
+                © Notes and Tones 2024<br>
+                Powered by <a target="_blank" href="https://getzola.org/">Zola</a>, Theme <a target="_blank" href="https://github.com/zbrox/anpu-zola-theme">Anpu</a>.
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
