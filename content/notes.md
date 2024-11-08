@@ -1,6 +1,6 @@
 +++
-title = "Some notes on scientific notetaking"
-date = "2023-12-18"
+title = "Writing notes like it's (almost) 2025"
+date = "2024-11-09"
 draft = true
 +++
 

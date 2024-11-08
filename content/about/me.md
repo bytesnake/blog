@@ -1,15 +1,13 @@
 +++
 title = ""
 date = "2023-11-27"
-draft = true
 +++
 
 <div class="me"> 
     <img src="../../me.jpg" width="300px" height="330px"><span style=""><b>Hey, I'm Lorenz</b>
     <ul>
-        <li> Research Interest: splitting methods, operator theory for signal processing, average-case analysis of iterations</li>
-        <li> Past Software Projects: Vim, Rust</li>
-        <li> Clarinets, Gambe, Jitterbugs</li>
+        <li> Research Interest: splitting methods, operator theory for signal processing, constraints in E2E learning</li>
+        <li> Past Software Projects: Vim, mainly Rust</li>
         <li> Please drop a line if something resonates with you and we can have a chat @<a href="mailto:mail@lorenzschmidt.com">mail@lorenzschmidt.com</a></li>
     </span>
 </div>
@@ -20,9 +18,9 @@ Before falling into the opt stew, I felt the joy of safe abstraction in projects
 
 I'm also host and user of the <a href="https://zettel.haus" target="_blank">zettel.haus</a> Mastodon instance for connected thoughts and an avid Vim and Linux user.
 
-Besides that I really like making music. I play clarinets and currently learning a bass viola da gamba for diversion. You can also find me dancing afro-american vernacular dances in Jitterbug style such as Shag, Lindy Hop and Balboa on floors.
+Besides that I really like making music. I play clarinets and currently learning a bass viola da gamba for diversion. I'm also interested in afro-american vernacular dances such as Shag, Lindy Hop or Balboa.
 
-I got an education at RWTH Aachen studying electrical engineering and computer science. 
+I studied electrical engineering and computer science at RWTH Aachen university.
 
 <br /><hr>
 

@@ -31,7 +31,7 @@ render_emoji = true
 [extra]
 anpu_menu_links = [
     { url = "$BASE_URL", name = "Posts" },
-    #{ url = "$BASE_URL/about/me", name = "About Me" },
+    { url = "$BASE_URL/about/me", name = "About Me" },
 ]
 
 social = [
