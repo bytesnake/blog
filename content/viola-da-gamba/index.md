@@ -27,9 +27,9 @@ Compared to the clarinet, the initial complexity is quite high because of left-r
 
 ### Motor skills and fountain pens
 
-Playing passages on the Gambe has an interesting side effect for me. Because it's so complex in motion, it feels a bit similar to fountain pen writing. In German there is the old proverb "Wer schreibt, der bleibt" (Whoever writes, stays), I really really hated in school, but came to accept lately. It means that the complex movement of writing helps encoding the written text in your memory. Though of course, not as varied in expression on a fret, playing still improves melody recitation for me.
+Playing passages on the Gambe has an interesting side effect for me. Because it's so complex in motion, it feels a bit similar to fountain pen writing. In German there is the old proverb "Wer schreibt, der bleibt" (Whoever writes, stays), I came to accept lately. It means that the complex movement of writing helps encoding the written text in your memory. Though of course, not as varied in expression on a fret, playing still improves melody recitation for me.
 
-### Some modest progression
+### Some modest progress
 
  <div style="width: 100%; overflow: hidden;">
      <div style="width: 200px; float: left;"> 
