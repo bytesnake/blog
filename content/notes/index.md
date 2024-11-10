@@ -92,6 +92,9 @@ Mastodon fits nicely because
  * memos can be attached to notes and collected with an apropriate hashtag
  * changes of toots are available and displayed similar like Git differences
 
+In total, a threaded note view looks like this
+
+<img src="./mastodon.png" width="400px" />
 
 ### Comments on Rust
 
