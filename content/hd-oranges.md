@@ -102,44 +102,42 @@ of the skin to get a fair share of pulp for high dimensions.
 
 ## Consequence for Approximating Norms  
 
-<p> Let’s pack the
+<p>Let’s pack the
 orange into a box. For simplicity we assume that the box has side length
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mn>1</mn></mrow></math> and recognize
-that an <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>-cube
+that an <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>-cube
 is described with the maximum norm. The volume of such a box is
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><msub><mrow><mi class="qopname">V</mi><mo> ⁡ </mo></mrow><mrow><mi>∞</mi><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub> <mo class="MathClass-rel">=</mo> <msup><mrow><mn>1</mn></mrow><mrow><mi>d</mi></mrow></msup> <mo class="MathClass-rel">=</mo> <mn>1</mn></mrow></math>, and
 comparing that to the volume of our orange
-</p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable class="align-star" columnalign="left">
-                         <mtr><mtd class="align-odd" columnalign="right"><mrow> <mfrac><mrow><msub><mrow><mi class="qopname">V</mi><mo> ⁡ </mo></mrow><mrow><mn>2</mn><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow>
+</p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable columnalign="left" class="align-star">
+                         <mtr><mtd columnalign="right" class="align-odd"><mrow> <mfrac><mrow><msub><mrow><mi class="qopname">V</mi><mo> ⁡ </mo></mrow><mrow><mn>2</mn><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow>
 <mrow><msub><mrow><mi class="qopname"> V</mi><mo> ⁡ </mo></mrow><mrow><mi>∞</mi><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow></mfrac> <mo class="MathClass-rel">=</mo>    <mfrac><mrow><msup><mrow><mi>π</mi></mrow><mrow><mi>d</mi><mo class="MathClass-bin">∕</mo><mn>2</mn></mrow></msup></mrow> 
 <mrow><mfrac><mrow><mi>d</mi></mrow>
-<mrow><mn>2</mn></mrow></mfrac><mi>Γ</mi><mo stretchy="false" class="MathClass-open">(</mo><mi>d</mi><mo class="MathClass-bin">∕</mo><mn>2</mn><mo stretchy="false" class="MathClass-close">)</mo><mn>1</mn></mrow></mfrac></mrow></mtd>                         <mtd class="align-even"><mspace width="2em"></mspace></mtd>                         <mtd columnalign="right" class="align-label">
+<mrow><mn>2</mn></mrow></mfrac><mi>Γ</mi><mo stretchy="false" class="MathClass-open">(</mo><mi>d</mi><mo class="MathClass-bin">∕</mo><mn>2</mn><mo class="MathClass-close" stretchy="false">)</mo><mn>1</mn></mrow></mfrac></mrow></mtd>                         <mtd class="align-even"><mspace width="2em"></mspace></mtd>                         <mtd class="align-label" columnalign="right">
    </mtd></mtr></mtable></math>
 <p class="noindent">Express this in log-space and use log-gamma approximation
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi class="qopname">log</mi><mo> ⁡ </mo><mi>Γ</mi><mo class="MathClass-open" stretchy="false">(</mo><mi>z</mi><mo stretchy="false" class="MathClass-close">)</mo> <mo class="MathClass-rel">≈</mo> <mo stretchy="false" class="MathClass-open">(</mo><mi>z</mi> <mo class="MathClass-bin">−</mo><mfrac><mrow><mn>1</mn></mrow> 
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi class="qopname">log</mi><mo> ⁡ </mo><mi>Γ</mi><mo stretchy="false" class="MathClass-open">(</mo><mi>z</mi><mo class="MathClass-close" stretchy="false">)</mo> <mo class="MathClass-rel">≈</mo> <mo stretchy="false" class="MathClass-open">(</mo><mi>z</mi> <mo class="MathClass-bin">−</mo><mfrac><mrow><mn>1</mn></mrow> 
 <mrow><mn>2</mn></mrow></mfrac><mo class="MathClass-close" stretchy="false">)</mo><mi class="qopname">log</mi><mo> ⁡ </mo><mi>z</mi> <mo class="MathClass-bin">−</mo> <mi>z</mi> <mo class="MathClass-bin">+</mo> <mfrac><mrow><mn>1</mn></mrow> 
-<mrow><mn>2</mn></mrow></mfrac><mi class="qopname"> log</mi><mo> ⁡ </mo><mo class="MathClass-open" stretchy="false">(</mo><mn>2</mn><mi>π</mi><mo class="MathClass-close" stretchy="false">)</mo></mrow></math>
+<mrow><mn>2</mn></mrow></mfrac><mi class="qopname"> log</mi><mo> ⁡ </mo><mo stretchy="false" class="MathClass-open">(</mo><mn>2</mn><mi>π</mi><mo stretchy="false" class="MathClass-close">)</mo></mrow></math>
                                                                   
 
                                                                   
-</p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable columnalign="left" class="align-star">
-                 <mtr><mtd class="align-odd" columnalign="right"><mrow><mi class="qopname">log</mi><mo> ⁡ </mo> <mfrac><mrow><msub><mrow><mi class="qopname">V</mi><mo> ⁡ </mo></mrow><mrow><mn>2</mn><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow> 
+</p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><mtable class="align-star" columnalign="left">
+                 <mtr><mtd columnalign="right" class="align-odd"><mrow><mi class="qopname">log</mi><mo> ⁡ </mo> <mfrac><mrow><msub><mrow><mi class="qopname">V</mi><mo> ⁡ </mo></mrow><mrow><mn>2</mn><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow> 
 <mrow><msub><mrow><mi class="qopname"> V</mi><mo> ⁡ </mo></mrow><mrow><mi>∞</mi><mo class="MathClass-punc">,</mo><mi>d</mi></mrow></msub></mrow></mfrac></mrow></mtd>                 <mtd class="align-even"><mrow> <mo class="MathClass-rel">=</mo> <mfrac><mrow><mi>d</mi></mrow> 
 <mrow><mn>2</mn></mrow></mfrac><mi class="qopname">log</mi><mo> ⁡ </mo><mi>π</mi> <mo class="MathClass-bin">−</mo><mi class="qopname"> log</mi><mo> ⁡ </mo> <mfrac><mrow><mi>d</mi></mrow> 
-<mrow><mn>2</mn></mrow></mfrac> <mo class="MathClass-bin">−</mo><mi class="qopname"> log</mi><mo> ⁡ </mo><mi>Γ</mi><mo class="MathClass-open" stretchy="false">(</mo><mfrac><mrow><mi>d</mi></mrow>
-<mrow><mn>2</mn></mrow></mfrac><mo class="MathClass-close" stretchy="false">)</mo><mspace width="2em"></mspace></mrow></mtd>                 <mtd columnalign="right" class="align-label"></mtd>                 <mtd class="align-label"><mrow>
-                 <mspace width="2em"></mspace></mrow></mtd></mtr><mtr><mtd class="align-odd" columnalign="right"></mtd>                          <mtd class="align-even"><mrow><mspace class="thinspace" width="0.17em"></mspace> <mo class="MathClass-rel">∼</mo> <mfrac><mrow><mi>d</mi></mrow> 
+<mrow><mn>2</mn></mrow></mfrac> <mo class="MathClass-bin">−</mo><mi class="qopname"> log</mi><mo> ⁡ </mo><mi>Γ</mi><mo stretchy="false" class="MathClass-open">(</mo><mfrac><mrow><mi>d</mi></mrow>
+<mrow><mn>2</mn></mrow></mfrac><mo stretchy="false" class="MathClass-close">)</mo><mspace width="2em"></mspace></mrow></mtd>                 <mtd class="align-label" columnalign="right"></mtd>                 <mtd class="align-label"><mrow>
+                 <mspace width="2em"></mspace></mrow></mtd></mtr><mtr><mtd columnalign="right" class="align-odd"></mtd>                          <mtd class="align-even"><mrow><mspace width="0.17em" class="thinspace"></mspace> <mo class="MathClass-rel">∼</mo> <mfrac><mrow><mi>d</mi></mrow> 
 <mrow><mn>2</mn></mrow></mfrac><mi class="qopname">log</mi><mo> ⁡ </mo> <mfrac><mrow><mn>2</mn><mi mathvariant="italic">πe</mi></mrow> 
  <mrow><mi>d</mi></mrow></mfrac>  <mo class="MathClass-bin">−</mo><mfrac><mrow><mn>1</mn></mrow> 
-<mrow><mn>2</mn></mrow></mfrac><mi class="qopname">log</mi><mo> ⁡ </mo> <mfrac><mrow><mn>2</mn><mi mathvariant="italic">πd</mi></mrow> 
- <mrow><mn>2</mn></mrow></mfrac>  <mspace width="2em"></mspace></mrow></mtd>                    <mtd class="align-label" columnalign="right"></mtd>                 <mtd class="align-label"><mrow>
+<mrow><mn>2</mn></mrow></mfrac><mi class="qopname">log</mi><mo> ⁡ </mo><mn>2</mn><mi mathvariant="italic">πd</mi><mspace width="2em"></mspace></mrow></mtd>                     <mtd class="align-label" columnalign="right"></mtd>                 <mtd class="align-label"><mrow>
                  <mspace width="2em"></mspace></mrow></mtd></mtr><mtr><mtd class="align-odd" columnalign="right"></mtd>                          <mtd class="align-even"><mrow><mspace class="thinspace" width="0.17em"></mspace> <mo class="MathClass-rel">∼</mo> <mfrac><mrow><mi>d</mi></mrow> 
 <mrow><mn>2</mn></mrow></mfrac><mi class="qopname">log</mi><mo> ⁡ </mo> <mfrac><mrow><mn>2</mn><mi mathvariant="italic">πe</mi></mrow> 
- <mrow><mi>d</mi></mrow></mfrac>  <mspace width="2em"></mspace></mrow></mtd>                               <mtd class="align-label" columnalign="right"></mtd>                 <mtd class="align-label"><mrow>
+ <mrow><mi>d</mi></mrow></mfrac>  <mspace width="2em"></mspace></mrow></mtd>                               <mtd columnalign="right" class="align-label"></mtd>                 <mtd class="align-label"><mrow>
    <mspace width="2em"></mspace></mrow></mtd></mtr></mtable></math>
-<p class="noindent">which turns negative once <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi> <mo class="MathClass-rel">&gt;</mo> <mn>2</mn><mi mathvariant="italic">πe</mi></mrow></math>
+<p class="noindent">which turns negative once <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi> <mo class="MathClass-rel">&gt;</mo> <mn>2</mn><mi mathvariant="italic">πe</mi></mrow></math>
 and grows linear in the dimensionality. Hence, the fraction diminishes exponentially fast. That
-means for large <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>d</mi></mrow></math>
-we can pack exponential many oranges into a single box!
-</p>
+means for large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>
+we can pack exponential many oranges into a single box!</p>
 
