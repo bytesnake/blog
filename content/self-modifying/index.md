@@ -1,6 +1,20 @@
 +++
 title = "Self-modifying configuration pattern"
 date = "2025-06-05"
+
+[extra]
+mailtoken = "j32oyb3"
+
+[extra.changelog]
+5402284 = { title="Add blog post about self-modifying pattern", date = "5 June, 2025" }
+
+[[extra.readnext]]
+title = "People actually do this for fun?"
+url = "https://ginoz.bearblog.dev/people-actually-do-this-for-fun/"
+desc = "Leaving my house is in the top three things I stopped doing since the pandemic began, almost five years ago."
+via = "bearblog.dev"
+date = "01 Sept, 2025"
+
 +++
 
 One of the interesting, and hard part, in calisthenic is the ability to progress between movements in [many different ways](https://docs.google.com/spreadsheets/d/1a8tlZ-zbF695HA3Lmm20OIYeYYxo1lmUOczUXKLoL4s/edit?gid=1833143925#gid=1833143925). I recently found myself in want of tracking exercise progressions long-term, and implemented a simple interval timer sourced from [TOML](https://toml.io/en/) files. For intra-exercise progressions, I found a self-modifying pattern useful, where the configuration keys can act on themselves.
@@ -10,7 +24,7 @@ One of the interesting, and hard part, in calisthenic is the ability to progress
 To tailor the interval timer to my specific use and keep complexity low, I've written a small JS webapp, where you can upload a set of exercises of TOML files. It then executes them progressively and offers a progressed version at the end, for the next time.
 
 For example, the Tuck Lever exercise does have a header of
-```toml
+```toml,name=https://github.com/getzola/zola/pull/2797
 [tuck-front-lever]
 tags = [ "bodyweight" ]
 text = """
