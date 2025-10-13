@@ -76,7 +76,9 @@ Further, I recently found out that TMux also supports Sixel in their latest vers
 
 In total this looks like this (rendering with headless chromium)
 
+{% figure(caption="Preview of ztl tool", id=1) %}
 ![Preview](./preview.gif)
+{% end %}
 
 ### Toots and Notes
 
