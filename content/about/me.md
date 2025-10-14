@@ -9,6 +9,7 @@ date = "2023-11-27"
         <li> Research Interest: splitting methods, operator theory for signal processing, constraints in E2E learning</li>
         <li> Past Software Projects: Vim, mainly Rust</li>
         <li> Please drop a line if something resonates with you and we can have a chat @<a href="mailto:mail@lorenzschmidt.com">mail@lorenzschmidt.com</a></li>
+        <li> <a href="/losch.asc.pub" target="_blank">PGP Public Key</a> (fingerprint <code>C370 59CD B343 149A 6D5F  6D13 2766 EE36 BC91 BEE2</code>)</li>
     </span>
 </div>
 
