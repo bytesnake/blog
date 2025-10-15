@@ -31,6 +31,8 @@ highlight_theme = "OneHalfLight"
 render_emoji = true
 insert_anchor_links = "left"
 
+smart_punctuation = true
+
 
 [extra]
 anpu_menu_links = [
