@@ -13,6 +13,8 @@ date = "2023-11-27"
     </span>
 </div>
 
+<div class="sep">About Me</div>
+
 My main study focus are first-order methods [<a href="#first_order">Bec17</a>] under stochasticity, (total) asynchronicity assumptions and their application to parsimonious models for low-complexity inference. In that, I'm interested in Lyapunov stability, invex functional structures and cardinality constraint relaxation for sparse learning (e.g., for tree structured filterbanks), operator sparsification and factorization.
 
 Before falling into the opt stew, I felt the joy of safe abstraction in projects with the Rust language. I'm a supporter of the Rust Machine Learning Group, past maintainer of Linfa [<a href="#linfa">SLL23</a>] and currently working on safe automatic differentiation compiler support for rustc.
@@ -56,3 +58,15 @@ Lorenz Schmidt, Yuhan Lin, Rémi Lafage, Luca Palmieri, Ivano Donadi, et al.
 
 </td>
 </tr>
+
+<div class="activities">
+    <div class="sep">Recent Activities</div>
+    <script>
+        window.addEventListener('load', function() {
+            fetch_all_repos(".activities", 
+                ["codeberg:blog-theme", "github:blog"])
+        })
+    </script>
+</div>
+
+
