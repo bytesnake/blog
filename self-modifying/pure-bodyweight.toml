@@ -1,0 +1,309 @@
+[bar-pullup]
+tags = [ "bodyweight" ]
+text = """
+## Pullups on Bar
+
+ - concentrate on concentric movement
+ - grip the bar shoulder wide
+ - look forward
+"""
+media = "https://thefitnessphantom.com/wp-content/uploads/2022/09/bodyweight-pulling-exercises.jpg"
+
+[bar-pullup.mods.decrease-pause]
+name = "Decrease Pause"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "pause")
+\t\tcontinue;
+
+\telm["length"] *= 0.75;
+}
+"""
+
+[bar-pullup.mods.increase-reps]
+name = "Increase Reps"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "set")
+\t\tcontinue;
+
+\telm["reps"] += 1
+}
+"""
+
+[bar-pullup.mods.nothing]
+name = "Do Nothing"
+action = ""
+
+[bar-pullup.config.prepare]
+steps = [ 2, 1, 1 ]
+
+[[bar-pullup.config.rythm]]
+interval = 2
+kind = "main"
+
+[[bar-pullup.config.rythm]]
+interval = 3
+kind = "double"
+
+[[bar-pullup.config.conduct]]
+reps = 6
+kind = "set"
+
+[[bar-pullup.config.conduct]]
+length = 56.25
+kind = "pause"
+
+[[bar-pullup.config.conduct]]
+reps = 6
+kind = "set"
+
+[[bar-pullup.config.conduct]]
+length = 56.25
+kind = "pause"
+
+[[bar-pullup.config.conduct]]
+reps = 6
+kind = "set"
+
+[[bar-pullup.config.setting]]
+name = "wider-grip"
+active = false
+
+[[bar-pullup.config.setting]]
+name = "archer-pullup"
+active = false
+
+[[bar-pullup.config.setting]]
+name = "weighted"
+weight = 0
+
+[frog-stand]
+tags = [ "bodyweight" ]
+text = """
+## Frog Stand
+ 
+ - tuck your elbows to legs
+ - hold for time
+"""
+media = "https://fitnessprogramer.com/wp-content/uploads/2023/06/Frog-Stand.gif"
+
+[frog-stand.mods.decrease-pause]
+name = "Decrease Pause"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "pause")
+\t\tcontinue;
+
+\telm["length"] *= 0.75;
+}
+"""
+
+[frog-stand.mods.nothing]
+name = "Do Nothing"
+action = ""
+
+[frog-stand.config.prepare]
+steps = [ 2, 1, 1 ]
+
+[[frog-stand.config.rythm]]
+interval = 7
+kind = "main"
+
+[[frog-stand.config.rythm]]
+interval = 3
+kind = "pulsed"
+
+[[frog-stand.config.conduct]]
+reps = 5
+kind = "set"
+
+[[frog-stand.config.conduct]]
+length = 45
+kind = "pause"
+
+[[frog-stand.config.conduct]]
+reps = 5
+kind = "set"
+
+[[frog-stand.config.conduct]]
+length = 45
+kind = "pause"
+
+[[frog-stand.config.conduct]]
+reps = 5
+kind = "set"
+
+[ring-hold]
+tags = [ "bodyweight" ]
+text = """
+## Ring Hold Isometric
+ 
+ - hang into rings and hold position
+ - move arms slightly outwards
+"""
+media = "https://calisthenics-hannibal.s3.eu-west-1.amazonaws.com/videos/exercises/-602a78d0a3d9c.mp4"
+
+[ring-hold.mods.decrease-pause]
+name = "Decrease Pause"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "pause")
+\t\tcontinue;
+
+\telm["length"] *= 0.75;
+}
+"""
+
+[ring-hold.mods.nothing]
+name = "Do Nothing"
+action = ""
+
+[[ring-hold.config.rythm]]
+interval = 11
+kind = "main"
+
+[[ring-hold.config.rythm]]
+interval = 3
+kind = "pulsed"
+
+[[ring-hold.config.conduct]]
+reps = 1
+kind = "set"
+
+[[ring-hold.config.conduct]]
+length = 40
+kind = "pause"
+
+[[ring-hold.config.conduct]]
+reps = 1
+kind = "set"
+
+[[ring-hold.config.conduct]]
+length = 40
+kind = "pause"
+
+[[ring-hold.config.conduct]]
+reps = 1
+kind = "set"
+
+[[ring-hold.config.conduct]]
+length = 40
+kind = "pause"
+
+[[ring-hold.config.conduct]]
+reps = 1
+kind = "set"
+
+[tuck-front-lever]
+tags = [ "bodyweight" ]
+text = """
+## Tuck Front Lever
+ 
+ - begin in a hang position and pull up into front lever position
+ - pull should blades down, packed shoulder feeling
+"""
+media = "https://workout-temple.com/wp-content/uploads/2022/11/sideview-tucked-front-lever.jpg"
+
+[tuck-front-lever.mods.decrease-pause]
+name = "Decrease Pause"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "pause")
+\t\tcontinue;
+
+\telm["length"] *= 0.75;
+}
+"""
+
+[tuck-front-lever.mods.nothing]
+name = "Do Nothing"
+action = ""
+
+[tuck-front-lever.config.prepare]
+steps = [ 2, 1, 1 ]
+
+[[tuck-front-lever.config.rythm]]
+interval = 7
+kind = "main"
+
+[[tuck-front-lever.config.rythm]]
+interval = 3
+kind = "pulsed"
+
+[[tuck-front-lever.config.conduct]]
+reps = 3
+kind = "set"
+
+[[tuck-front-lever.config.conduct]]
+length = 56.25
+kind = "pause"
+
+[[tuck-front-lever.config.conduct]]
+reps = 3
+kind = "set"
+
+[[tuck-front-lever.config.conduct]]
+length = 56.25
+kind = "pause"
+
+[[tuck-front-lever.config.conduct]]
+reps = 3
+kind = "set"
+
+[l-sit]
+tags = [ "bodyweight" ]
+text = """
+## Packed L-Sit
+ 
+ - sit on ground and put hands besides you
+ - hands should point outwards
+ - lift off the ground for a few seconds
+"""
+media = "https://liftmanual.com/wp-content/uploads/2023/04/l-sit-on-floor.webp"
+
+[l-sit.mods.decrease-pause]
+name = "Decrease Pause"
+action = """
+for (const elm of cfg["config"]["conduct"]) {
+\tif(elm["kind"] != "pause")
+\t\tcontinue;
+
+\telm["length"] *= 0.75;
+}
+"""
+
+[l-sit.mods.nothing]
+name = "Do Nothing"
+action = ""
+
+[l-sit.config.prepare]
+steps = [ 1, 1 ]
+
+[[l-sit.config.rythm]]
+interval = 5
+kind = "main"
+
+[[l-sit.config.rythm]]
+interval = 4
+kind = "pulsed"
+
+[[l-sit.config.conduct]]
+reps = 4
+kind = "set"
+
+[[l-sit.config.conduct]]
+length = 40
+kind = "pause"
+
+[[l-sit.config.conduct]]
+reps = 4
+kind = "set"
+
+[[l-sit.config.conduct]]
+length = 40
+kind = "pause"
+
+[[l-sit.config.conduct]]
+reps = 4
+kind = "set"
