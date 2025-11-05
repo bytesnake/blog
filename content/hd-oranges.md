@@ -140,4 +140,3 @@ comparing that to the volume of our orange
 and grows linear in the dimensionality. Hence, the fraction diminishes exponentially fast. That
 means for large <math xmlns="http://www.w3.org/1998/Math/MathML" display="inline"><mrow><mi>d</mi></mrow></math>
 we can pack exponential many oranges into a single box!</p>
-
