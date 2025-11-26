@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Learning behavior of BF programs</h1>
+    </header>
+    <div class="content">
+        <p>In this post, we will generate populations of programs consisting
+of only <em>eight</em> instructions and optimize their fitness to reproduce
+a target behaviour (for example reversing a sequence) with
+<em>genetic programming</em>.</p>
+<span id="continue-reading"></span>
+<p>Genetic programming (GP) is a paradigm inspired by nature’s
+evolution process. It models a natural selection process of
+possible candidates. A research favorite in the last decade,
+because of its ability to derive macro-level behavior from
+plain description of micro-level interactions, it makes minimal
+assumption on the model structure and hence is applicable
+to a wide range of problems <sup class="footnote-reference"><a href="#1">1</a></sup>.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>which is also their main drawack, as missing assumptions make
+them hard to <a href="https://stackoverflow.com/questions/4380627/what-is-holding-genetic-programming-back">scale to larger problems</a>.</p>
+</div>
+<p>I recently got two weeks of tinkering time and looked at
+interactions between an esoteric language and GP.</p>
+<h2 id="zeroth-order-optimization-with-crossovers-and-mutations"><a class="zola-anchor" href="#zeroth-order-optimization-with-crossovers-and-mutations" aria-label="Anchor link for: zeroth-order-optimization-with-crossovers-and-mutations"></a>
+Zeroth order optimization with Crossovers and Mutations</h2>
+<p>First, we introduce some concepts for genetic programming,
+and model a problem interface with Rust’s <a href="https://doc.rust-lang.org/book/ch10-02-traits.html">trait</a> syntax. The
+trait bundles all capabilities we expect from problems
+applicable to GP.</p>
+<p>The GP implementation is generic over different problems and
+we provide necessary methods with trait bound <code>P: Chromosome</code>
+for the generic problem parameter <code>P</code> and trait <code>Chromosome</code>.</p>
+<p>We will call possible solutions <em><strong>chromosomes</strong></em> , set of chromosomes
+our <em><strong>population</strong></em>, and the performance of a single chromose the <em><strong>fitness</strong></em>.</p>
+<p>The key element of a genetic program is the ability to
+generate two (or more) offsprings from given parents. The
+method signature reads <code>Chromosome::crossover(a: &amp;Self, b: &amp;Self) -&gt; Vec&lt;Self&gt;;</code> and generate combinations of features
+from both parents <sup class="footnote-reference"><a href="#2">2</a></sup>.</p>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p>For example, in the simple case of coordinates that would
+perform convex combinations of their pairs. See the <a href="http://127.0.0.1:1111/genetic-brainfuck/#function-optimization">section below</a>, for
+an example of this implementation.</p>
+</div>
+<p>Without mutation no new behavior could be introduced to our
+population. The <code>Chromosome::mutate(self, p: f32) -&gt; Self</code>
+takes ownership of a chromosome and mutates its feature with
+a small probability <code>p</code>.</p>
+<p>To keep well-working variations stable between iterations,
+we divide the population into two groups. The first is kept
+between iteration, the second is replaced and resampled
+based on fitness of the whole population.</p>
+<p>Our algorithm is then pretty simple to lay out. We first assess our
+population based on the current fitness</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let mut</span><span> chromo_by_fitness </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.pops.</span><span style="color:#0184bc;">drain</span><span>(</span><span style="color:#a626a4;">..</span><span>).</span><span style="color:#0184bc;">map</span><span>(|</span><span style="color:#e45649;">c</span><span>| (c, c.</span><span style="color:#0184bc;">fitness</span><span>()))
+</span><span>    .collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span>
+</span><span>chromo_by_fitness.</span><span style="color:#0184bc;">sort_by</span><span>(|</span><span style="color:#e45649;">a</span><span>,</span><span style="color:#e45649;">b</span><span>| a.</span><span style="color:#c18401;">1.</span><span style="color:#0184bc;">total_cmp</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>b.</span><span style="color:#c18401;">1</span><span>));
+</span></code></pre>
+<p>we then keep the Nth best chromosomes in our population</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let</span><span> chroms </span><span style="color:#a626a4;">=</span><span> chromo_by_fitness.</span><span style="color:#0184bc;">into_iter</span><span>().</span><span style="color:#0184bc;">map</span><span>(|(</span><span style="color:#e45649;">c</span><span>, _)| c).collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span style="color:#e45649;">self</span><span>.pops.</span><span style="color:#0184bc;">extend</span><span>(chroms.</span><span style="color:#0184bc;">into_iter</span><span>().</span><span style="color:#0184bc;">take</span><span>(</span><span style="color:#e45649;">self</span><span>.n_keep));
+</span></code></pre>
+<p>and replace the remaining population with offsprings from
+randomly sampled parents</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let </span><span>(parents_a, parents_b) </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#0184bc;">parents</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>chromo_by_fitness, rng);
+</span><span>
+</span><span style="color:#a0a1a7;">// perform crossovers
+</span><span style="color:#a626a4;">let</span><span> childs </span><span style="color:#a626a4;">=</span><span> parents_a.</span><span style="color:#0184bc;">into_iter</span><span>().</span><span style="color:#0184bc;">zip</span><span>(parents_b.</span><span style="color:#0184bc;">into_iter</span><span>())
+</span><span>    .</span><span style="color:#0184bc;">flat_map</span><span>(|(</span><span style="color:#e45649;">a</span><span>,</span><span style="color:#e45649;">b</span><span>)| T::crossover(</span><span style="color:#a626a4;">&amp;</span><span>chroms[a], </span><span style="color:#a626a4;">&amp;</span><span>chroms[b], </span><span style="color:#a626a4;">&amp;mut</span><span> rng))
+</span><span>    .collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span>
+</span><span style="color:#e45649;">self</span><span>.pops.</span><span style="color:#0184bc;">extend</span><span>(childs);
+</span></code></pre>
+<p>Finally, we introduce small random variations to our
+population set</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#e45649;">self</span><span>.pops </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.pops.</span><span style="color:#0184bc;">into_iter</span><span>().</span><span style="color:#0184bc;">map</span><span>(|</span><span style="color:#e45649;">x</span><span>| T::mutate(x, </span><span style="color:#a626a4;">&amp;mut</span><span> rng, </span><span style="color:#e45649;">self</span><span>.mutation_p)).</span><span style="color:#0184bc;">collect</span><span>();
+</span></code></pre>
+<p>That provides us with a low number of hyper-parameters
+for the optimization process. We have the number of iterations,
+the total population size, the best population size and the
+mutation probability. We can add a small <a href="https://rust-unofficial.github.io/patterns/patterns/creational/builder.html">builder pattern</a>
+to make configuration more simple, and have such a call
+procedure:</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let</span><span> pop: Population&lt;Problem&gt; </span><span style="color:#a626a4;">= </span><span>PopulationBuilder::default()
+</span><span>    .</span><span style="color:#0184bc;">num_iter</span><span>(</span><span style="color:#c18401;">500</span><span style="color:#a626a4;">usize</span><span>)
+</span><span>    .</span><span style="color:#0184bc;">n_pop</span><span>(</span><span style="color:#c18401;">16</span><span style="color:#a626a4;">usize</span><span>)
+</span><span>    .</span><span style="color:#0184bc;">n_keep</span><span>(</span><span style="color:#c18401;">8</span><span style="color:#a626a4;">usize</span><span>)
+</span><span>    .</span><span style="color:#0184bc;">mutation_p</span><span>(</span><span style="color:#c18401;">0.01</span><span>)
+</span><span>    .</span><span style="color:#0184bc;">build</span><span>().</span><span style="color:#0184bc;">unwrap</span><span>()
+</span><span>    .</span><span style="color:#0184bc;">execute</span><span>(</span><span style="color:#a626a4;">&amp;mut </span><span>rand::rng());
+</span><span>
+</span><span>dbg!(</span><span style="color:#a626a4;">&amp;</span><span>pop.</span><span style="color:#0184bc;">get_best</span><span>());
+</span></code></pre>
+<h3 id="function-optimization"><a class="zola-anchor" href="#function-optimization" aria-label="Anchor link for: function-optimization"></a>
+Function optimization</h3>
+<p>To make our algorithm more concrete, let’s implement a
+simple problem. We choose to optimize the <a href="https://en.wikipedia.org/wiki/Himmelblau%27s_function">Himmelblau’s function</a>,
+a non-convex function with four minima and analytical
+solutions.</p>
+<p>The performance of a chromosome is, in this example, simply the value of the
+function landscape at a point:</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">fitness</span><span>(</span><span style="color:#a626a4;">&amp;</span><span style="color:#e45649;">self</span><span>) -&gt; </span><span style="color:#a626a4;">f32 </span><span>{
+</span><span>    (</span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">0.</span><span style="color:#0184bc;">powf</span><span>(</span><span style="color:#c18401;">2.0</span><span>) </span><span style="color:#a626a4;">+ </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">- </span><span style="color:#c18401;">11.0</span><span>).</span><span style="color:#0184bc;">powf</span><span>(</span><span style="color:#c18401;">2.0</span><span>) </span><span style="color:#a626a4;">+ </span><span>(</span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">+ </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">1.</span><span style="color:#0184bc;">powf</span><span>(</span><span style="color:#c18401;">2.0</span><span>) </span><span style="color:#a626a4;">- </span><span style="color:#c18401;">7.</span><span>).</span><span style="color:#0184bc;">powf</span><span>(</span><span style="color:#c18401;">2.0</span><span>)
+</span><span>}
+</span></code></pre>
+<p>Performing a cross-over does a convex combinations of both
+2D coordinates</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">crossover</span><span>(</span><span style="color:#e45649;">x</span><span>: </span><span style="color:#a626a4;">&amp;Self</span><span>, </span><span style="color:#e45649;">y</span><span>: </span><span style="color:#a626a4;">&amp;Self</span><span>, </span><span style="color:#e45649;">rng</span><span>: </span><span style="color:#a626a4;">&amp;mut Self::</span><span>R) -&gt; Vec&lt;</span><span style="color:#a626a4;">Self</span><span>&gt; {
+</span><span>    </span><span style="color:#a626a4;">let</span><span> uni </span><span style="color:#a626a4;">= </span><span>Uniform::new(</span><span style="color:#c18401;">0.0</span><span>, </span><span style="color:#c18401;">1.0</span><span>).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span>    </span><span style="color:#a626a4;">let </span><span>(a1, a2) </span><span style="color:#a626a4;">= </span><span>(uni.</span><span style="color:#0184bc;">sample</span><span>(rng), uni.</span><span style="color:#0184bc;">sample</span><span>(rng));
+</span><span>    </span><span style="color:#a626a4;">let </span><span>(b1, b2) </span><span style="color:#a626a4;">= </span><span>(uni.</span><span style="color:#0184bc;">sample</span><span>(rng), uni.</span><span style="color:#0184bc;">sample</span><span>(rng));
+</span><span>
+</span><span>    vec![
+</span><span>        </span><span style="color:#a626a4;">Self</span><span>(x.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">*</span><span> a1 </span><span style="color:#a626a4;">+</span><span> y.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">* </span><span>(</span><span style="color:#c18401;">1. </span><span style="color:#a626a4;">-</span><span> a1), x.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">*</span><span> a2 </span><span style="color:#a626a4;">+</span><span> y.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">* </span><span>(</span><span style="color:#c18401;">1. </span><span style="color:#a626a4;">-</span><span> a2)), 
+</span><span>        </span><span style="color:#a626a4;">Self</span><span>(x.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">*</span><span> b1 </span><span style="color:#a626a4;">+</span><span> y.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">* </span><span>(</span><span style="color:#c18401;">1. </span><span style="color:#a626a4;">-</span><span> b1), x.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">*</span><span> b2 </span><span style="color:#a626a4;">+</span><span> y.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">* </span><span>(</span><span style="color:#c18401;">1. </span><span style="color:#a626a4;">-</span><span> b2))]
+</span><span>}
+</span></code></pre>
+<p>Random mutation adds noise to current solution to move
+outside of the solution space</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">mutate</span><span>(</span><span style="color:#a626a4;">mut </span><span style="color:#e45649;">self</span><span>, </span><span style="color:#e45649;">rng</span><span>: </span><span style="color:#a626a4;">&amp;mut Self::</span><span>R, </span><span style="color:#e45649;">p</span><span>: </span><span style="color:#a626a4;">f32</span><span>) -&gt; </span><span style="color:#a626a4;">Self </span><span>{
+</span><span>    </span><span style="color:#a626a4;">let</span><span> uni </span><span style="color:#a626a4;">= </span><span>Uniform::new(</span><span style="color:#a626a4;">-</span><span>p, p).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span>    </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">0 </span><span style="color:#a626a4;">+=</span><span> rng.</span><span style="color:#0184bc;">sample</span><span>(uni);
+</span><span>    </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#c18401;">1 </span><span style="color:#a626a4;">+=</span><span> rng.</span><span style="color:#0184bc;">sample</span><span>(uni);
+</span><span>
+</span><span>    </span><span style="color:#e45649;">self
+</span><span>}
+</span></code></pre>
+<p>Running this sample problem, yields the following sample progressions:</p>
+<figure>
+	<p><img src="/genetic-brainfuck/animation.gif" alt="Himmelblau" /></p>
+
+	
+	<figcaption>
+		<a href="#figure-1">Figure 1.</a>
+		Sample run of Himmelblau function optimization. Each iteration represents the current state of population. The crosses are individual coordinates of chromosomes. In the middle, two minima are populated, at a later stage only a single one.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h2 id="esoteric-language"><a class="zola-anchor" href="#esoteric-language" aria-label="Anchor link for: esoteric-language"></a>
+Esoteric language</h2>
+<p>For mathematical function optimization, genetic programming is ill equipped. If we increase
+the number of dimensions, our number of samples has to grow exponentially <sup class="footnote-reference"><a href="#3">3</a></sup>. But what we
+gain is flexibility in our problem definition. We will now see how to optimize a software
+function represented in the brainfuck (BF) language.</p>
+<div class="footnote-definition" id="3"><sup class="footnote-definition-label">3</sup>
+<p>See <a href="https://ncra.ucd.ie/papers/complexity_measures_cec2016.pdf">this</a> for a review of complexity analysis for GP.</p>
+</div>
+<p>BF is a simplistic language which consists of only eigth
+instructions. It operates on a tape, and uses as simple
+input and output queue. The <em><strong>program</strong></em> and <em><strong>instruction</strong></em> definition of the AST reads as</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">type </span><span>Program </span><span style="color:#a626a4;">= </span><span>Vec&lt;Instruction&gt;;
+</span><span>
+</span><span style="color:#a626a4;">pub enum </span><span>Instruction {
+</span><span>    Right,         </span><span style="color:#a0a1a7;">// move pointer to the right for tape
+</span><span>    Left,          </span><span style="color:#a0a1a7;">// move pointer to the left for tape
+</span><span>    Increment,     </span><span style="color:#a0a1a7;">// increment value at current pointer
+</span><span>    Decrement,     </span><span style="color:#a0a1a7;">// decrement value at current pointer
+</span><span>    Write,         </span><span style="color:#a0a1a7;">// put current element to output
+</span><span>    Read,          </span><span style="color:#a0a1a7;">// pop element to current pointer position
+</span><span>    Loop(Program), </span><span style="color:#a0a1a7;">// loop until element is zero
+</span><span>}
+</span></code></pre>
+<p>Hence, due too its simple structure, implementing
+an interpreter is straightforward. <sup class="footnote-reference"><a href="#4">4</a></sup></p>
+<div class="footnote-definition" id="4"><sup class="footnote-definition-label">4</sup>
+<p>I actually don’t implement an executor in this blog post,
+because it is not really of interest. But inspiration can
+<a href="https://github.com/Overv/bf">come</a> <a href="https://github.com/nixpulvis/brainfuck">from</a> <a href="https://crates.io/crates/brain-brainfuck">many</a> <a href="https://crates.io/crates/brain">sources</a>.</p>
+</div>
+<p>So how should a <em>crossover</em> or <em>mutation</em> function look like
+for a BF program? We should most certainly not apply them
+to the character-level representation, as they may be invalid
+due to mismatches between loop start <code>[</code> and end <code>]</code>.</p>
+<p>Instead, we traverse the instruction tree and mutate elements
+based on probability distributions. For <code>mutation</code> we randomly
+<em>delete</em>, <em>replace</em> a node at any position. Additionally, we
+also <em>add</em> a second node with a small probability to each position,
+so that the instruction tree can also grow. (and is actually
+balanced with chance of deletion).</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let</span><span> d </span><span style="color:#a626a4;">= </span><span>Bernoulli::new(p </span><span style="color:#a626a4;">as f64</span><span>).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span style="color:#a626a4;">let</span><span> instr </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.instr.</span><span style="color:#0184bc;">into_iter</span><span>()
+</span><span>    .</span><span style="color:#0184bc;">filter_map</span><span>(|</span><span style="color:#a626a4;">mut </span><span style="color:#e45649;">ins</span><span>| {
+</span><span>        </span><span style="color:#a0a1a7;">// recurse into in case of a loop instruction
+</span><span>        </span><span style="color:#a626a4;">if let </span><span>Instruction::Loop(prg) </span><span style="color:#a626a4;">=</span><span> ins {
+</span><span>            ins </span><span style="color:#a626a4;">= </span><span>Instruction::Loop(prg.</span><span style="color:#0184bc;">mutate</span><span>(rng, p));
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#a626a4;">match </span><span>(d.</span><span style="color:#0184bc;">sample</span><span>(rng), d.</span><span style="color:#0184bc;">sample</span><span>(rng), d.</span><span style="color:#0184bc;">sample</span><span>(rng)) {
+</span><span>            </span><span style="color:#a0a1a7;">// drop at random
+</span><span>            (</span><span style="color:#c18401;">true</span><span>, </span><span style="color:#a626a4;">_</span><span>, </span><span style="color:#a626a4;">_</span><span>) </span><span style="color:#a626a4;">=&gt; </span><span>None,
+</span><span>            </span><span style="color:#a0a1a7;">// either generate insert second, or replace the current
+</span><span>            (</span><span style="color:#c18401;">false</span><span>, </span><span style="color:#c18401;">true</span><span>, </span><span style="color:#a626a4;">_</span><span>) </span><span style="color:#a626a4;">| </span><span>(</span><span style="color:#c18401;">false</span><span>, </span><span style="color:#c18401;">false</span><span>, </span><span style="color:#c18401;">true</span><span>) </span><span style="color:#a626a4;">=&gt; </span><span>Some(</span><span style="color:#a626a4;">Self</span><span>::generate(</span><span style="color:#c18401;">1</span><span>, rng).instr),
+</span><span>            </span><span style="color:#a0a1a7;">// otherwise, just reuse the existing instruction
+</span><span>            (</span><span style="color:#c18401;">false</span><span>, </span><span style="color:#c18401;">false</span><span>, </span><span style="color:#c18401;">false</span><span>) </span><span style="color:#a626a4;">=&gt; </span><span>Some(vec![ins]),
+</span><span>        }
+</span><span>    })
+</span><span>    .</span><span style="color:#0184bc;">flatten</span><span>()
+</span><span>    .</span><span style="color:#0184bc;">collect</span><span>();
+</span></code></pre>
+<p>The implementation of tree crossover is a bit more involved, but basically
+involves zipping both tree traversals and choosing either the node from
+tree A, or the tree of B at chance. It also handles edge-cases, when one
+tree is larger than another one.</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">let</span><span> d </span><span style="color:#a626a4;">= </span><span>Bernoulli::new(</span><span style="color:#c18401;">0.95</span><span>).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span style="color:#a626a4;">let </span><span>(</span><span style="color:#a626a4;">mut</span><span> var_a, </span><span style="color:#a626a4;">mut</span><span> var_b) </span><span style="color:#a626a4;">= </span><span>(Vec::new(), Vec::new());
+</span><span style="color:#a626a4;">for</span><span> i </span><span style="color:#a626a4;">in</span><span> a.instr.</span><span style="color:#0184bc;">iter</span><span>().</span><span style="color:#0184bc;">zip_longest</span><span>(b.instr.</span><span style="color:#0184bc;">iter</span><span>()) {
+</span><span>    </span><span style="color:#a626a4;">match</span><span> i {
+</span><span>        Both(a,b) </span><span style="color:#a626a4;">=&gt; </span><span>{
+</span><span>            </span><span style="color:#a626a4;">let </span><span>(a,b) </span><span style="color:#a626a4;">= match </span><span>(a,b) {
+</span><span>                (Instruction::Loop(x), Instruction::Loop(y)) </span><span style="color:#a626a4;">=&gt; </span><span>{
+</span><span>                    </span><span style="color:#a626a4;">let</span><span> obj </span><span style="color:#a626a4;">= Self</span><span>::crossover(</span><span style="color:#a626a4;">&amp;</span><span>x, </span><span style="color:#a626a4;">&amp;</span><span>y, rng);
+</span><span>
+</span><span>                    (Instruction::Loop(obj[</span><span style="color:#c18401;">0</span><span>].</span><span style="color:#0184bc;">clone</span><span>()), Instruction::Loop(obj[</span><span style="color:#c18401;">1</span><span>].</span><span style="color:#0184bc;">clone</span><span>()))
+</span><span>                },
+</span><span>                </span><span style="color:#a626a4;">_ =&gt; </span><span>(a.</span><span style="color:#0184bc;">clone</span><span>(),b.</span><span style="color:#0184bc;">clone</span><span>())
+</span><span>            };
+</span><span>
+</span><span>            </span><span style="color:#a0a1a7;">// whether we choose A or B for new A
+</span><span>            </span><span style="color:#a626a4;">match</span><span> d.</span><span style="color:#0184bc;">sample</span><span>(rng) {
+</span><span>                </span><span style="color:#c18401;">true </span><span style="color:#a626a4;">=&gt;</span><span> var_a.</span><span style="color:#0184bc;">push</span><span>(a.</span><span style="color:#0184bc;">clone</span><span>()),
+</span><span>                </span><span style="color:#c18401;">false </span><span style="color:#a626a4;">=&gt;</span><span> var_a.</span><span style="color:#0184bc;">push</span><span>(b.</span><span style="color:#0184bc;">clone</span><span>())
+</span><span>            }
+</span><span>
+</span><span>            </span><span style="color:#a0a1a7;">// whether we choose A or B for new B
+</span><span>            </span><span style="color:#a626a4;">match</span><span> d.</span><span style="color:#0184bc;">sample</span><span>(rng) {
+</span><span>                </span><span style="color:#c18401;">true </span><span style="color:#a626a4;">=&gt;</span><span> var_b.</span><span style="color:#0184bc;">push</span><span>(b.</span><span style="color:#0184bc;">clone</span><span>()),
+</span><span>                </span><span style="color:#c18401;">false </span><span style="color:#a626a4;">=&gt;</span><span> var_b.</span><span style="color:#0184bc;">push</span><span>(a.</span><span style="color:#0184bc;">clone</span><span>())
+</span><span>            }
+</span><span>        },
+</span><span>        Left(a) </span><span style="color:#a626a4;">=&gt; </span><span style="color:#a0a1a7;">// ...
+</span><span>        Right(b) </span><span style="color:#a626a4;">=&gt; </span><span style="color:#a0a1a7;">// ...
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h3 id="measuring-program-correctness"><a class="zola-anchor" href="#measuring-program-correctness" aria-label="Anchor link for: measuring-program-correctness"></a>
+Measuring program correctness</h3>
+<p>We generate pairs of random input and outputs. How do we measure the performance of
+our program for the give pairs? I choose the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levensthein distance</a> for that.</p>
+<p>The fitness function generates <code>N</code> samples with increasing length, generates the
+expected output, runs the program and compares the edit distance to the target.</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">fitness</span><span>(</span><span style="color:#a626a4;">&amp;</span><span style="color:#e45649;">self</span><span>) -&gt; </span><span style="color:#a626a4;">f32 </span><span>{
+</span><span>    </span><span style="color:#a0a1a7;">// init tape to max length of 512 bytes
+</span><span>    </span><span style="color:#a626a4;">let mut</span><span> tape </span><span style="color:#a626a4;">= </span><span>vec![</span><span style="color:#c18401;">0</span><span>; </span><span style="color:#c18401;">512</span><span>];
+</span><span>    </span><span style="color:#a626a4;">let mut</span><span> idx </span><span style="color:#a626a4;">= </span><span style="color:#c18401;">256</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#a0a1a7;">// uniform distribution for input sampling
+</span><span>    </span><span style="color:#a626a4;">let</span><span> distr </span><span style="color:#a626a4;">= </span><span>Uniform::new(</span><span style="color:#c18401;">0</span><span>, </span><span style="color:#c18401;">255</span><span>).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span>    </span><span style="color:#a626a4;">let</span><span> rng </span><span style="color:#a626a4;">= </span><span>rand::rng();
+</span><span>
+</span><span>    </span><span style="color:#a626a4;">let mut</span><span> samples </span><span style="color:#a626a4;">= </span><span>Vec::new();
+</span><span>    </span><span style="color:#a626a4;">for</span><span> i </span><span style="color:#a626a4;">in </span><span style="color:#c18401;">1</span><span style="color:#a626a4;">..</span><span style="color:#c18401;">6 </span><span>{
+</span><span>        </span><span style="color:#a0a1a7;">// generate random input
+</span><span>        </span><span style="color:#a626a4;">let</span><span> inp </span><span style="color:#a626a4;">=</span><span> rng.</span><span style="color:#0184bc;">clone</span><span>().</span><span style="color:#0184bc;">sample_iter</span><span>(distr).</span><span style="color:#0184bc;">take</span><span>(i).</span><span style="color:#0184bc;">map</span><span>(|</span><span style="color:#e45649;">x</span><span>| x </span><span style="color:#a626a4;">as u8</span><span>)
+</span><span>            .collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// run program 
+</span><span>        </span><span style="color:#a626a4;">let</span><span> res </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#0184bc;">run</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>inp, </span><span style="color:#a626a4;">&amp;mut</span><span> tape, </span><span style="color:#a626a4;">&amp;mut</span><span> idx);
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// target is sequence reversal
+</span><span>        </span><span style="color:#a626a4;">let</span><span> target </span><span style="color:#a626a4;">=</span><span> inp.</span><span style="color:#0184bc;">into_iter</span><span>().</span><span style="color:#0184bc;">rev</span><span>()
+</span><span>            .collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// calculate edit distance
+</span><span>        samples.</span><span style="color:#0184bc;">push</span><span>(</span><span style="color:#0184bc;">edit_distance</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>res, </span><span style="color:#a626a4;">&amp;</span><span>target) </span><span style="color:#a626a4;">as f32</span><span>);
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// reset tape
+</span><span>        tape </span><span style="color:#a626a4;">= </span><span>vec![</span><span style="color:#c18401;">0</span><span>; </span><span style="color:#c18401;">512</span><span>];
+</span><span>        idx </span><span style="color:#a626a4;">= </span><span style="color:#c18401;">256</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#a0a1a7;">// calculate sum of distance samples
+</span><span>    samples.</span><span style="color:#0184bc;">into_iter</span><span>().sum::&lt;</span><span style="color:#a626a4;">f32</span><span>&gt;()
+</span><span>}
+</span></code></pre>
+<h3 id="results-of-random-permutations-of-programs"><a class="zola-anchor" href="#results-of-random-permutations-of-programs" aria-label="Anchor link for: results-of-random-permutations-of-programs"></a>
+Results of random permutations of programs</h3>
+<p>So, what is the chance that we are generating a working string reversal program
+after some iteration on our population:</p>
+<figure>
+	<p><img src="/genetic-brainfuck/stats.png" alt="Statistics" /></p>
+
+	
+	<figcaption>
+		<a href="#figure-2">Figure 2.</a>
+		Mean&#x2F;Max&#x2F;Min statistics of running 100 randomly initiated populations.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>The figure highlights that we can find a working program after just 300 iterations, or we may be stuck
+without any progress for at least 5000 iterations. But on average our optimization process works and
+we can minimize the edit distance for 100 samples to around 2.</p>
+<h1 id="conclusion"><a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"></a>
+Conclusion</h1>
+<p>Mixing programs with some randomness and sorting results measured by some useful
+fitness, results in a working optimization process. Pretty neat. The process has
+of course some hyperparameters attached we have cross-validate, such as the population
+size, the mutation probability, but only a few. And for our simple problem of
+<em>sequence reversal</em> the average edit distance seems to be indeed monotonic decreasing.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-09-09"> 9 September 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+<div class="responds">
+	<div class="sep">Discussion</div>
+
+	Have a suggestion or want to stay updated? Start a <a href="mailto:git@lorenzschmidt.com?subject=action%3Astartthread%20id%3Ajbv78s" style="font-variant: small-caps">new thread</a> below or <a href="mailto:git@lorenzschmidt.com?subject=action%3Asubscribe" style="font-variant: small-caps">subscribe</a> by emailing me.
+
+	<div class="content">No comments yet!</div>
+</div>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

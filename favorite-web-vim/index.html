@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Reading and writing the web with Vim</h1>
+    </header>
+    <div class="content">
+        <p>Two features of the <a href="https://addons.mozilla.org/de/firefox/addon/tridactyl-vim/">Tridactyl</a> extension makes reading/writing the web much more relaxing for me. The most common
+element of Vim like extensions is link following with highlighted key-codes. This makes mouse pointing unecessary
+and reading workflow easier. (also don’t forget to use the <code>g&lt;f|F&gt;</code> chain) But I find the visualized style of many
+websites too distracting and use Vim in those cases to construct an answer or dissect a thread.</p>
+<span id="continue-reading"></span>
+<p>A lesser known feature of Tridactyl is the <code>$EDITOR</code> insert mode where a custom buffer is created in the background
+edit by the set editor and then input into the website. Together with a tiling window manager you can write a
+prose of text, without having to look at the website during this process. This lessen mental strain for me and
+let me concentrate on the actual question. I’m often use this for Github. You first have to check that the native plugin
+is installed with <code>:native</code> and can apply this to any form by pressing <code>&lt;Ctrl&gt; + i</code> when focused on the element.</p>
+<video width="100%" controls>
+  <source src="vim-write.mp4" type="video/mp4">
+</video>
+<p>Reading a website in Vim is not directly supported by Tridactyl but the native messenger makes simple (yet powerful) extensions
+possible. You can find a script <a href="https://github.com/bytesnake/scidots/blob/main/.local/bin/stash_website">here</a> which takes a url, parses with pandoc and puts that into my stash folder
+and open the file in Vim. From Tridactyl you only have to bind this script to a key:</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#0184bc;">bind</span><span> ,e composite get_current_url </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">exclaim_quiet </span><span>$</span><span style="color:#e45649;">HOME</span><span>/.local/bin/stash_website epub
+</span><span style="color:#0184bc;">bind</span><span> ,p composite get_current_url </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">exclaim_quiet </span><span>$</span><span style="color:#e45649;">HOME</span><span>/.local/bin/stash_website pdf
+</span><span style="color:#0184bc;">bind</span><span> ,m composite get_current_url </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">exclaim_quiet </span><span>$</span><span style="color:#e45649;">HOME</span><span>/.local/bin/stash_website markdown
+</span></code></pre>
+<p>so that you can press <code>,&lt;e|p|m|&gt;</code> to generate either epub, pdf or markdown format. I’m using markdown format to
+read in 95% of the time. Pruning the website, marking interesting sections and making extracts happens with the
+day-to-day Vim commands.</p>
+<video width="100%" controls>
+  <source src="vim-read.mp4" type="video/mp4">
+</video>
+<p>That’s all, have a nice and fulfilled day!</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2022-10-07"> 7 October 2022</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

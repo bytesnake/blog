@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Building standalone model binaries for audio inference</h1>
+    </header>
+    <div class="content">
+        <p>For a recent problem I had to crawl and categorize
+a large number of audio files from the internet.
+As the bottleneck was deemed to be downstream link
+I decided to use a pre-trained event
+classification model and run inference on the CPU.</p>
+<p>Another requirement was that the crawler were
+running on multiple server and consistent for
+several weeks. My choice of language for such
+infrastructure heavy task is Rust and I looked
+into ways how to deploy an inference model.</p>
+<p>It turned out that the process for creating a
+standalone binary in Rust is pretty simple. Even
+better, wrapping a model pre-trained on a large
+event classification dataset is possible.
+This means that in the end I could just copy the
+binary to any x86 machines and run them, without
+the need to setup virtual environments or install
+any packages.</p>
+<p>In this post I will demonstrate how to convert a
+pre-trained model to ONNX and put it into a
+binary. Our goal is to create a standalone
+executable taking samples from stdin and
+classifying them into 527 known audio classes.</p>
+<span id="continue-reading"></span><h2 id="onnx-and-audio-pattern-recognition"><a class="zola-anchor" href="#onnx-and-audio-pattern-recognition" aria-label="Anchor link for: onnx-and-audio-pattern-recognition"></a>
+ONNX and audio pattern recognition</h2>
+<p>The Open Neural Network Exchange (ONNX) is an open
+standard for machine learning interoperability. It
+provides the definitions to export the compute
+graph of a machine learning model and consumer can
+implement the main operators for a specific
+architecture.</p>
+<p>In our case we the excellent <a href="https://github.com/fschmid56/EfficientAT">EfficientAT</a> model, pre-trained
+on AudioSet and compressed into smaller CNN
+architectures. Exporting a model to an ONNX file
+is simple enough.</p>
+<p>We first load the model <code>mn10_as</code> with acceptable
+performance</p>
+<pre data-lang="python" style="background-color:#fafafa;color:#383a42;" class="language-python "><code class="language-python" data-lang="python"><span style="color:#a626a4;">from </span><span>hear_mn </span><span style="color:#a626a4;">import </span><span>mn01_all_b_mel_avgs
+</span><span style="color:#a626a4;">from </span><span>hear_mn.helpers.utils </span><span style="color:#a626a4;">import </span><span style="color:#e45649;">NAME_TO_WIDTH
+</span><span style="color:#a626a4;">from </span><span>hear_mn.models.MobileNetV3 </span><span style="color:#a626a4;">import </span><span>get_model
+</span><span>
+</span><span>mn10_as </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">get_model</span><span>(</span><span style="color:#e45649;">width_mult</span><span style="color:#a626a4;">=</span><span style="color:#e45649;">NAME_TO_WIDTH</span><span>(</span><span style="color:#50a14f;">&quot;mn10_as&quot;</span><span>), </span><span style="color:#e45649;">pretrained_name</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">&quot;mn10_as&quot;</span><span>,
+</span><span>                    </span><span style="color:#e45649;">collect_component_ids</span><span style="color:#a626a4;">=</span><span style="color:#e45649;">tuple</span><span>(</span><span style="color:#e45649;">list</span><span>(</span><span style="color:#0184bc;">range</span><span>(</span><span style="color:#c18401;">16</span><span>)))).</span><span style="color:#e45649;">cuda</span><span>()
+</span></code></pre>
+<p>and then use the ONNX export of PyTorch to save
+our compute graph to <code>efficientat.onnx</code>:</p>
+<pre data-lang="python" style="background-color:#fafafa;color:#383a42;" class="language-python "><code class="language-python" data-lang="python"><span>torch.onnx.</span><span style="color:#e45649;">export</span><span>(wrapper, torch_input, </span><span style="color:#50a14f;">&quot;efficientat.onnx&quot;</span><span>, \
+</span><span>        </span><span style="color:#e45649;">input_names </span><span style="color:#a626a4;">= </span><span>[</span><span style="color:#50a14f;">&quot;melspec&quot;</span><span>], </span><span style="color:#e45649;">output_names </span><span style="color:#a626a4;">= </span><span>[</span><span style="color:#50a14f;">&quot;logits&quot;</span><span>], \
+</span><span>        </span><span style="color:#e45649;">dynamic_axes </span><span style="color:#a626a4;">= </span><span>{ \
+</span><span>            </span><span style="color:#50a14f;">&quot;melspec&quot;</span><span>: {</span><span style="color:#c18401;">0</span><span>: </span><span style="color:#50a14f;">&quot;batch_size&quot;</span><span>, </span><span style="color:#c18401;">3</span><span>: </span><span style="color:#50a14f;">&quot;time_axis&quot;</span><span>}, \
+</span><span>            </span><span style="color:#50a14f;">&quot;logits&quot;</span><span>: {</span><span style="color:#c18401;">0</span><span>: </span><span style="color:#50a14f;">&quot;batch_size&quot; </span><span>}})
+</span></code></pre>
+<p>This attributes <code>melspec</code> to the input of mel
+spectrogram features and <code>logits</code> for our 527
+logits we use for classification. It further
+defines two dynamic axis to vary the number of
+batches and frames for inference (number of
+channels and features are fixed though and
+correspond to mel filterbanks).</p>
+<h2 id="standalone-inference"><a class="zola-anchor" href="#standalone-inference" aria-label="Anchor link for: standalone-inference"></a>
+Standalone inference</h2>
+<p>With the exported model we can hop to a new Rust
+binary and install the x86_64 MUSL toolchain.</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">$</span><span> cargo new</span><span style="color:#e45649;"> --bin</span><span> audio-inference
+</span><span style="color:#e45649;">$</span><span> rustup target install x86_64-unknown-linux-musl
+</span></code></pre>
+<p>To actually load our ONNX model for inference we
+use the excellent <a href="https://github.com/sonos/tract">tract</a> crate provided by Sonos.</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">cargo</span><span> add tract @ 0.21
+</span></code></pre>
+<p>and do a test load of our ONNX model:</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">main</span><span>() {
+</span><span>    </span><span style="color:#a626a4;">let mut</span><span> model_cursor </span><span style="color:#a626a4;">= </span><span>Cursor::new(include_bytes!(</span><span style="color:#50a14f;">&quot;../efficientat.onnx&quot;</span><span>));
+</span><span>    </span><span style="color:#a626a4;">let</span><span> model </span><span style="color:#a626a4;">= </span><span>tract_onnx::onnx()
+</span><span>        .</span><span style="color:#0184bc;">model_for_read</span><span>(</span><span style="color:#a626a4;">&amp;mut</span><span> model_cursor).</span><span style="color:#0184bc;">unwrap</span><span>()
+</span><span>        .</span><span style="color:#0184bc;">into_runnable</span><span>().</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span>
+</span><span>    dbg!(</span><span style="color:#a626a4;">&amp;</span><span>model);
+</span><span>}
+</span></code></pre>
+<p>We then compile with the MUSL target</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">$</span><span> cargo build</span><span style="color:#e45649;"> --release --target</span><span> x86_64-unknown-linux-musl
+</span></code></pre>
+<p>and, voila, have a standalone binary without any
+dependencies</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">$</span><span> ldd ./target/x86_64-unknown-linux-musl/release/audio-inference
+</span><span>	</span><span style="color:#e45649;">statically</span><span> linked
+</span></code></pre>
+<h2 id="feeding-and-filterbank"><a class="zola-anchor" href="#feeding-and-filterbank" aria-label="Anchor link for: feeding-and-filterbank"></a>
+Feeding and Filterbank</h2>
+<p>The remaining part is mainly diligence work. We
+need to implement a Mel filterbank producing same
+features as the PyTorch implementation and feed it
+to our model.</p>
+<p>To match the same implementation, I first export
+the Mel filterbank and STFT windows from PyTorch
+to <code>npy</code> files.</p>
+<p>Then I implement a struct which first performs the
+STFT with our custom window and then converts the
+complex frequency coefficients into a Mel features
+with our custom filterbank.</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">pub struct </span><span>Features {
+</span><span>    </span><span style="color:#a0a1a7;">// ..
+</span><span>}
+</span><span>
+</span><span style="color:#a626a4;">impl </span><span>Features {
+</span><span>    </span><span style="color:#a0a1a7;">// ..
+</span><span>
+</span><span>    </span><span style="color:#a626a4;">pub fn </span><span style="color:#0184bc;">preprocess</span><span>(</span><span style="color:#a626a4;">&amp;mut </span><span style="color:#e45649;">self</span><span>, </span><span style="color:#e45649;">inp</span><span>: </span><span style="color:#a626a4;">&amp;</span><span>[</span><span style="color:#a626a4;">f32</span><span>]) -&gt; Array2&lt;</span><span style="color:#a626a4;">f32</span><span>&gt; {
+</span><span>        </span><span style="color:#a0a1a7;">// apply pre-emphasize filter
+</span><span>        </span><span style="color:#a0a1a7;">// ..
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// center with reflect mode
+</span><span>        </span><span style="color:#a0a1a7;">// ..
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// calculate power of each frequency bin
+</span><span>        </span><span style="color:#a626a4;">let</span><span> spec </span><span style="color:#a626a4;">= </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#0184bc;">stft2</span><span>(samples.</span><span style="color:#0184bc;">view</span><span>());
+</span><span>        </span><span style="color:#a626a4;">let</span><span> spec </span><span style="color:#a626a4;">=</span><span> spec.</span><span style="color:#0184bc;">mapv</span><span>(|</span><span style="color:#e45649;">x</span><span>| x.</span><span style="color:#0184bc;">norm</span><span>().</span><span style="color:#0184bc;">powf</span><span>(</span><span style="color:#c18401;">2.0</span><span>));
+</span><span>
+</span><span>        </span><span style="color:#a0a1a7;">// project to log-space, normalized, mel coefficients
+</span><span>        </span><span style="color:#e45649;">self</span><span>.fbank.</span><span style="color:#0184bc;">dot</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>spec.</span><span style="color:#0184bc;">t</span><span>()).</span><span style="color:#0184bc;">mapv</span><span>(|</span><span style="color:#e45649;">x</span><span>| (x</span><span style="color:#a626a4;">+</span><span style="color:#c18401;">0.00001</span><span>).</span><span style="color:#0184bc;">ln</span><span>()).</span><span style="color:#0184bc;">mapv</span><span>(|</span><span style="color:#e45649;">x</span><span>| (x </span><span style="color:#a626a4;">+ </span><span style="color:#c18401;">4.5</span><span>) </span><span style="color:#a626a4;">/ </span><span style="color:#c18401;">5.</span><span>)
+</span><span>    }
+</span></code></pre>
+<p>For the full implementation take a look <a href="https://bytesnake.github.io/blog/rust-inference/github.com/bytesnake/">here</a>.</p>
+<h2 id="improve-memory-allocation-performance-characteristics"><a class="zola-anchor" href="#improve-memory-allocation-performance-characteristics" aria-label="Anchor link for: improve-memory-allocation-performance-characteristics"></a>
+Improve memory allocation performance characteristics</h2>
+<p>I found that the model performed poorly for the
+MUSL target. My immediate suspect was the memory
+allocator and indeed the <a href="https://www.tweag.io/blog/2023-08-10-rust-static-link-with-mimalloc/">malloc implementation</a>
+of MUSL can be pretty slow.</p>
+<p>Instead I added the <a href="https://github.com/microsoft/mimalloc">mimalloc</a> allocator by Microsoft
+to my project</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">cargo</span><span> add mimalloc
+</span></code></pre>
+<p>and register it at the top of my main file</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">use </span><span>mimalloc::MiMalloc;
+</span><span>
+</span><span>#[</span><span style="color:#e45649;">global_allocator</span><span>]
+</span><span style="color:#a626a4;">static </span><span style="color:#c18401;">GLOBAL</span><span>: MiMalloc </span><span style="color:#a626a4;">=</span><span> MiMalloc;
+</span></code></pre>
+<p>and the performance problems were gone.</p>
+<h2 id="putting-it-all-together"><a class="zola-anchor" href="#putting-it-all-together" aria-label="Anchor link for: putting-it-all-together"></a>
+Putting it all together</h2>
+<p>What remains to be done? We need to read samples
+from some input stream and associate the resulting
+logits to pre-defined classes of our model.</p>
+<p>As the dataset is multi-label I just sort them by
+their evidence and print the top 10 classes for
+the input.</p>
+<p>Add the <a href="https://github.com/ruuda/hound">hound</a> crate for reading WAV files to <code>f32</code>
+vectors</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">cargo</span><span> add hound
+</span></code></pre>
+<p>and combine with our feature extractor and model</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a0a1a7;">// load audio file and convert to mel features
+</span><span style="color:#a626a4;">let mut</span><span> reader </span><span style="color:#a626a4;">= </span><span>hound::WavReader::open(</span><span style="color:#a626a4;">&amp;</span><span>env::argv[</span><span style="color:#c18401;">1</span><span>]).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span style="color:#a626a4;">let</span><span> samples </span><span style="color:#a626a4;">=</span><span> reader.samples::&lt;</span><span style="color:#a626a4;">f32</span><span>&gt;().collect::&lt;Vec&lt;</span><span style="color:#a626a4;">_</span><span>&gt;&gt;();
+</span><span style="color:#a626a4;">let</span><span> features </span><span style="color:#a626a4;">= </span><span>Feature::new(</span><span style="color:#c18401;">1024 </span><span style="color:#a0a1a7;">/* FFT size */</span><span>, </span><span style="color:#c18401;">800 </span><span style="color:#a0a1a7;">/* window size */</span><span>, </span><span style="color:#c18401;">320 </span><span style="color:#a0a1a7;">/* overlap */</span><span>)
+</span><span>    .</span><span style="color:#0184bc;">preprocess</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>samples);
+</span><span>
+</span><span style="color:#a0a1a7;">// perform inference with ONNX model
+</span><span style="color:#a626a4;">let</span><span> input: Tensor </span><span style="color:#a626a4;">=</span><span> features.</span><span style="color:#0184bc;">into</span><span>();
+</span><span style="color:#a626a4;">let</span><span> nframes </span><span style="color:#a626a4;">=</span><span> features.</span><span style="color:#0184bc;">shape</span><span>()[</span><span style="color:#c18401;">1</span><span>];
+</span><span style="color:#a626a4;">let</span><span> features </span><span style="color:#a626a4;">=</span><span> features.</span><span style="color:#0184bc;">into_shape</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>[</span><span style="color:#c18401;">1</span><span>, </span><span style="color:#c18401;">1</span><span>, </span><span style="color:#c18401;">128</span><span>, nframes]).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span style="color:#a626a4;">let</span><span> result </span><span style="color:#a626a4;">=</span><span> model.</span><span style="color:#0184bc;">run</span><span>(tvec!(features.</span><span style="color:#0184bc;">into</span><span>())).</span><span style="color:#0184bc;">unwrap</span><span>();
+</span><span>
+</span><span style="color:#a0a1a7;">// get logits from output
+</span><span style="color:#a626a4;">let</span><span> res </span><span style="color:#a626a4;">=</span><span> result[result.</span><span style="color:#0184bc;">len</span><span>() </span><span style="color:#a626a4;">- </span><span style="color:#c18401;">2</span><span>].to_array_view::&lt;</span><span style="color:#a626a4;">f32</span><span>&gt;().</span><span style="color:#0184bc;">unwrap</span><span>();
+</span></code></pre>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-08-10">10 August 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

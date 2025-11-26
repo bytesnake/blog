@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>A Telescope picker for ZTL</h1>
+    </header>
+    <div class="content">
+        <p>Navigating a set of notes is central for a useful note
+taking system. I recently designed a custom note picker for
+ZTL and aplied ideas of modal editing to its function.</p>
+<span id="continue-reading"></span>
+<p>The <a href="https://github.com/nvim-telescope/telescope.nvim">Telescope</a> picker <sup class="footnote-reference"><a href="#1">1</a></sup> displays references associated
+with one note, a note list or all notes in the <em><strong>ZTL</strong></em>
+repository. It packs a lot of information in a small area,
+provides a <em>result</em> window for displaying list of potential notes, a
+window for entering a <em>prompt</em>, to further subselect results,
+and a <em>preview</em> window for viewing information associated with
+the note. As the notes are generated from either Markdown,
+LaTeX or BibTeX (see <a href="https://lorenzschmidt.com/notes/#all-the-formats-i-need">last post</a>), notes do have a type and
+of course an associated header.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Telescope provides a template to rapidly develope
+different forms of pickers. Their examples showcases
+among others file pickers, Git commit pickers, etc.</p>
+</div>
+<p>For example, the overlay looks like this when querying all
+available notes:</p>
+<figure>
+	<img src="allnotes_annot2.png" />
+	
+	<figcaption>
+		<a href="#figure-1">Figure 1.</a>
+		Telescope picker for all notes. The prompt window allows searching in notes header and the preview window shows ranges of selected note
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>Similar to Ariadne’s thread the picker allows following
+a chain of notes, until the desired one is located. Moving along
+the chain is easy done with the <code>&lt;Plug&gt;ZtlFollow</code> and
+<code>&lt;Plug&gt;ZtlRetreat</code> keymaps <sup class="footnote-reference"><a href="#2">2</a></sup>. (normally associated with arrow keys)</p>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p>I use the <code>&lt;Plug&gt; Plugin Action</code> syntax from ViM to
+define custom keymaps and provide more context of their
+function. See the <a href="https://vimhelp.org/usr_51.txt.html#using-%3CPlug%3E">:help using-&lt;Plug&gt;</a> help page for
+further information.</p>
+</div>
+<p>At each position we can show either <em><strong>incoming</strong></em>, <em><strong>outgoing</strong></em> links or
+the <em><strong>history</strong></em> of a note. Incoming links include parent
+note, and those referencing us, outgoing links include all
+children notes and links contained in the note content. The
+history of a note displays all commits in the Git history
+associated with changes to either the note content or
+header. Their associated keymaps are
+<code>&lt;Plug&gt;ZtlModeOutgoing</code>, <code>&lt;Plug&gt;ZtlModeIncoming</code> and
+<code>&lt;Plug&gt;ZtlModeHistory</code>.</p>
+<p>For outgoing and history modes (incoming looks the same with
+different arrows), the results window looks like this:</p>
+<figure>
+	<img src="notemode.png" />
+	
+	<figcaption>
+		<a href="#figure-2">Figure 2.</a>
+		Outgoing notes and history modes.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>Following a commit in the repository brings up all notes
+changed in that specific instance. I also borrowed the Git
+commit previewer from the Telescope repository to show
+change date, commit message and changed files with syntax
+highlighting.</p>
+<h2 id="modal-editing-and-actions-depending-on-the-initial-mode"><a class="zola-anchor" href="#modal-editing-and-actions-depending-on-the-initial-mode" aria-label="Anchor link for: modal-editing-and-actions-depending-on-the-initial-mode"></a>
+Modal editing and actions depending on the initial mode</h2>
+<p>This becomes more powerful, when combining with the modal
+editing approach of ViM to create custom actions for a
+selected note.</p>
+<p>In ViM jargon we support currently actions based on either
+the <em><strong>insert mode</strong></em>, <em><strong>visual mode</strong></em> or <em><strong>normal mode</strong></em>. For normal mode,
+we open selected note in current window, for insert mode, we
+paste a new link at the current cursor position and jump to
+fill in the link text, for visual mode we replace the
+selected text with note. To give an example, here for visual
+mode:</p>
+<div id="ascii-jj-describe"></div>
+<script>
+  AsciinemaPlayer.create(
+    "/note-picker/record.asc",
+    document.getElementById("ascii-jj-describe"),
+    {
+      idleTimeLimit: 0.5,
+      startAt: 6,
+      endAt: 22,
+    },
+  );
+</script>
+<h2 id="three-previews-for-notes"><a class="zola-anchor" href="#three-previews-for-notes" aria-label="Anchor link for: three-previews-for-notes"></a>
+Three previews for notes</h2>
+<p>Textual information is simple, we just display the range of
+lines corresponding to a note. For showing the history of a
+note, we parse the result of <code>git log</code> and display
+associated commits, which changed a note.</p>
+<p>For resources, the task is a bit more involved. We have to
+take a snapshot of the resource at a given view. For this, I
+have written an auxilliary binary called <code>ztl-res</code>. It does
+all the heavy work of search and rendering views into
+snippets, ready to display to terminals.</p>
+<p>That looks currently like this, and allows to include views
+in the generated links (with the help of <a href="https://en.wikipedia.org/wiki/Sixel">SIXEL</a>):</p>
+<figure>
+	<img src="resource.png" width="400px" />
+	
+	<figcaption>
+		<a href="#figure-3">Figure 3.</a>
+		View of a resource, here a PDF file and its associated named anchors.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h2 id="conclusion"><a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion"></a>
+Conclusion</h2>
+<p>It is astonishing how rich the information is, you can be packed in a
+pure textual information (plus some snippets) representation. The picker
+respresents all possible interactions with the set of notes.</p>
+<p>That’s all for now :) Next time I will write about scheduling in the
+ZTL system and managing long running cycles.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-10-30">30 October 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+<div class="responds">
+	<div class="sep">Discussion</div>
+
+	Have a suggestion or want to stay updated? Start a <a href="mailto:git@lorenzschmidt.com?subject=action%3Astartthread%20id%3Adjkl3j" style="font-variant: small-caps">new thread</a> below or <a href="mailto:git@lorenzschmidt.com?subject=action%3Asubscribe" style="font-variant: small-caps">subscribe</a> by emailing me.
+
+	<div class="content">No comments yet!</div>
+</div>
+
+
+
+
+<div class="useful-links">
+	<div class="sep">Read Next</div>
+
+	<div class="content">
+	
+	<div>
+		<a class="title" href="&#x2F;notes">Writing notes like it&#x27;s (almost) 2025</a>
+		<span class="body">I wrote a new iteration of my note system during a week vacation from home. Motivated with two recent observations, that the system I want to built is actually a static note generator, and that Mastodon is a good fit for publishing and reviewing notes, I created a tool called ztl.</span>
+		<a class="via" href="lorenzschmidt.com">via lorenzschmidt.com</a>
+		<span class="date">10. November 2024</span>
+	</div>
+	
+	</div>
+</div>
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

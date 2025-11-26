@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Symbolic Gradient Field with STE Variants</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.min.js"></script>
+</head>
+<body>
+  <h2>Symbolic Gradient Field with STE, SPIGOT, RotSTE</h2>
+
+  <div style="margin-bottom: 10px;">
+    <label for="funcInput">Function: </label>
+    <input type="text" id="funcInput" size="30" value="x^2 + y^2" />
+    
+    <label for="modeSelect"> Mode: </label>
+    <select id="modeSelect">
+      <option value="STE">STE</option>
+      <option value="Hessian">STE + Second-Order</option>
+      <option value="RotSTE">RotSTE</option>
+      <option value="SPIGOT">SPIGOT</option>
+    </select>
+
+    <button onclick="renderPlot()">Plot</button>
+  </div>
+
+  <div id="plot" style="width: 100%; height: 90vh;"></div>
+
+  <script>
+	  class Vec2 {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  static from(x, y) {
+    return new Vec2(x, y);
+  }
+
+  norm() {
+    return Math.sqrt(this.x ** 2 + this.y ** 2);
+  }
+
+  dot(other) {
+    return this.x * other.x + this.y * other.y;
+  }
+
+  scale(factor) {
+    return new Vec2(this.x * factor, this.y * factor);
+  }
+
+  add(other) {
+    return new Vec2(this.x + other.x, this.y + other.y);
+  }
+
+  sub(other) {
+    return new Vec2(this.x - other.x, this.y - other.y);
+  }
+
+  toString() {
+    return `(${this.x.toFixed(2)}, ${this.y.toFixed(2)})`;
+  }
+}
+
+
+    const xRange = [-5, 5];
+    const yRange = [-5, 5];
+    const resolution = 25;
+    const step = 1;
+
+    const xVals = Array.from({ length: resolution }, (_, i) =>
+      xRange[0] + (i / (resolution - 1)) * (xRange[1] - xRange[0])
+    );
+    const yVals = Array.from({ length: resolution }, (_, j) =>
+      yRange[0] + (j / (resolution - 1)) * (yRange[1] - yRange[0])
+    );
+
+    let f = null, dfdx = null, dfdy = null;
+    let plotData = [];
+    let layout = {};
+    let contour = {};
+    let shaftTrace = {}, headTrace = {};
+
+    function parseFunction(funcStr) {
+      const expr = math.parse(funcStr);
+      const [dx, dy] = [
+		  math.derivative(expr, 'x'),
+          math.derivative(expr, 'y'),
+	  ];
+      return {
+        f: expr.compile(),
+		dfdx: dx.compile(),
+		dfdy: dy.compile(),
+        dfdxx: math.derivative(dx, 'x').compile(),
+        dfdyy: math.derivative(dy, 'y').compile(),
+        dfdyx: math.derivative(dx, 'y').compile()
+      };
+    }
+
+    function evaluateFunctionGrid(fval) {
+      return yVals.map(y => xVals.map(x => fval.evaluate({ x, y })));
+    }
+
+    function grad(x, y) {
+      return [dfdx.evaluate({ x, y }), dfdy.evaluate({ x, y })];
+    }
+
+    function hess(x, y) {
+      return [
+		  Vec2.from(dfdxx.evaluate({ x, y }), dfdyx.evaluate({ x, y })),
+		  Vec2.from(dfdyx.evaluate({ x, y }), dfdyy.evaluate({ x, y })),
+		]
+    }
+
+    function applySTE(dx, dy, bx, by, base, point, dd, mode) {
+      let ddx = dx - bx;
+      let ddy = dy - by;
+
+      switch (mode) {
+        case 'SPIGOT':
+		  const pt = point.sub(base).scale(0.5);
+		  [ddx, ddy] = [bx + pt.x, by + pt.y];
+          break;
+        case 'RotSTE':
+		  let grad = Vec2.from(bx, by);
+		  const [e_hat, q_hat] = [point.scale(1. / point.norm()), base.scale(1. / base.norm())]
+			let r = e_hat.add(q_hat);
+		    r = r.scale(1. / r.norm());
+			  const [a,b] = [r.scale(r.dot(grad)).scale(-2.), e_hat.scale(q_hat.dot(grad)).scale(2.)];
+			  grad = grad.add(a).add(b).scale(base.norm() / point.norm());
+			  [ddx, ddy] = [grad.x, grad.y];
+          break;
+        case 'Hessian':
+			const diff = point.sub(base);
+			let c = Vec2.from(dd[0].dot(diff), dd[1].dot(diff));
+			[ddx, ddy] = [bx + c.x, by + c.y];
+			break;
+        case 'STE':
+        default:
+		  [ddx, ddy] = [bx, by];
+          break;
+      }
+
+      return [ddx, ddy];
+    }
+
+    function generateGradientField(base = null, baseGrad = null, scale = 0.5, color = 'black', mode = 'STE') {
+      const shaft = {
+        type: 'scatter',
+        mode: 'lines',
+        x: [],
+        y: [],
+        line: { color, width: 1 },
+        showlegend: false
+      };
+
+      const heads = {
+        type: 'scatter',
+        mode: 'markers',
+        x: [],
+        y: [],
+        marker: {
+          symbol: 'dots',
+          size: 6,
+          color,
+          angleref: 'previous'
+        },
+        showlegend: false
+      };
+
+      for (let i = 0; i < resolution; i += step) {
+        for (let j = 0; j < resolution; j += step) {
+          const x = xVals[i];
+          const y = yVals[j];
+
+          let [dx, dy] = grad(x, y);
+          let dd = hess(x, y);
+          if (baseGrad) {
+            [dx, dy] = applySTE(dx, dy, baseGrad[0], baseGrad[1], Vec2.from(base[0], base[1]), Vec2.from(x,y), dd, mode);
+          }
+
+          const mag = Math.max(Math.sqrt(dx * dx + dy * dy), 1.0) || 1;
+          const ux = (dx / mag) * scale;
+          const uy = (dy / mag) * scale;
+
+          const x1 = x + ux;
+          const y1 = y + uy;
+
+          shaft.x.push(x, x1, null);
+          shaft.y.push(y, y1, null);
+
+          heads.x.push(x1);
+          heads.y.push(y1);
+        }
+      }
+return [shaft, heads];
+    }
+
+    function renderPlot() {
+      const funcStr = document.getElementById("funcInput").value;
+      const mode = document.getElementById("modeSelect").value;
+
+      try {
+        const parsed = parseFunction(funcStr);
+        f = parsed.f;
+        dfdx = parsed.dfdx;
+        dfdy = parsed.dfdy;
+        dfdxx = parsed.dfdxx;
+        dfdyy = parsed.dfdyy;
+        dfdyx = parsed.dfdyx;
+      } catch (e) {
+        alert("Invalid function: " + e.message);
+        return;
+      }
+
+      const zVals = evaluateFunctionGrid(f);
+
+      contour = {
+        z: zVals,
+        x: xVals,
+        y: yVals,
+        type: 'contour',
+        colorscale: 'Viridis',
+        contours: { coloring: 'heatmap' },
+        line: { smoothing: 0.85 },
+        opacity: 0.7
+      };
+
+      layout = {
+        title: `f(x, y) = ${funcStr}`,
+        xaxis: { title: 'x', scaleanchor: "y", scaleratio: 1 },
+        yaxis: { title: 'y' },
+        dragmode: 'closest'
+      };
+
+      plotData = [contour,];
+      Plotly.newPlot("plot", plotData, layout);
+    }
+
+    const plotDiv = document.getElementById('plot');
+    document.getElementById("plot").addEventListener('click', function(evt) {
+      const mode = document.getElementById("modeSelect").value;
+		var bb = evt.target.getBoundingClientRect();
+    var x0 = plotDiv._fullLayout.xaxis.p2d(evt.clientX - bb.left);
+    var y0 = plotDiv._fullLayout.yaxis.p2d(evt.clientY - bb.top);
+
+      const baseGrad = grad(x0, y0);
+
+      const [diffShaft, diffHeads] = generateGradientField([x0, y0], baseGrad, 0.5, 'red', mode);
+
+      const marker = {
+        type: 'scatter',
+        mode: 'markers',
+        x: [x0],
+        y: [y0],
+        marker: {
+          color: 'red',
+          size: 10,
+          symbol: 'cross'
+        },
+        name: 'Selected Point'
+      };
+
+      Plotly.react("plot", [contour, diffShaft, diffHeads, marker], layout);
+    });
+
+    // Initial render
+    renderPlot();
+  </script>
+</body>
+</html>

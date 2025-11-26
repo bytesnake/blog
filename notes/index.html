@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Writing notes like it&#x27;s (almost) 2025</h1>
+    </header>
+    <div class="content">
+        <p>I wrote a new iteration of my note system during a week vacation from home. Motivated with two recent observations, that the system I want to built is actually a static note generator, and that Mastodon is a good fit for publishing and reviewing notes, I created a tool called <a href="https://github.com/bytesnake/ztl">ztl</a>.</p>
+<span id="continue-reading"></span>
+<p>The website you’re currently reading is generated with something called a static website generator, in this case the excellent <a href="https://www.getzola.org/">zola</a> tool. Its main feature is that everything is compiled once into a set of static files, which can be served to the reader with a simple HTTP endpoint.</p>
+<p>The equivalent for a note taking system is a static note generator. It takes a all files in a subfolder, generates linked notes from them and saves the artifact in a simple format (here <a href="https://toml.io/en/">TOML</a>) for downstream use. The artifact has three characteristics, it is</p>
+<p><strong>rendered</strong>   the note content is rendered into a universal format, here HTML together with MathML for displaying formulae.</p>
+<p><strong>linked</strong>   from the artifact parent note, outgoing links and incoming links are readily available for navigating to relevant content</p>
+<p><strong>spanned</strong>   span for each source file provides an overlay we can use for editors to display inline information when viewing</p>
+<p>I recently had a whole week vacation at home and built such a tool which can (1) render a folder into notes (2) do a live-preview of the content (3) publish them to a Mastodon instance</p>
+<h3 id="all-the-formats-i-need"><a class="zola-anchor" href="#all-the-formats-i-need" aria-label="Anchor link for: all-the-formats-i-need"></a>
+All the formats I need</h3>
+<p>There are two modes of writing which are irreconcilable for me. The first I use for prose text, the second for scientific notation. As I’m comfortable with LaTeX and don’t want to miss out on the <code>ams*</code> packages, I opted for markdown and LaTeX.</p>
+<p>In side-by-side comparison the syntax for markdown,</p>
+<pre data-lang="markdown" style="background-color:#fafafa;color:#383a42;" class="language-markdown "><code class="language-markdown" data-lang="markdown"><span style="color:#0184bc;"># tpawk9 Encoding for optimal retrieval practice
+</span><span>
+</span><span>The initial encoding technique is important in retrieval practice. Connecting
+</span><span>the to-be-learned to already established </span><span style="color:#50a14f;">[memory codes](k4e29j)</span><span> gives a head-start
+</span><span>for any further spaced out retrieval practice sessions.
+</span><span>
+</span><span>[...]
+</span><span>
+</span><span style="color:#0184bc;">## nell5y Encoding in melody learning
+</span><span>
+</span><span>For efficient melody learning, muscle, ear and cognitive capabilities are
+</span><span>possible strategies for encoding.
+</span><span>
+</span><span>[...]
+</span></code></pre>
+<p>and the syntax for LaTeX with theorem blocks, custom commands and operators,</p>
+<pre data-lang="latex" style="background-color:#fafafa;color:#383a42;" class="language-latex "><code class="language-latex" data-lang="latex"><span style="color:#a626a4;">\begin</span><span>{definition}[</span><span style="color:#e45649;">label</span><span>=1k5i7v, name=Polar Cones]
+</span><span>    The polar </span><span style="color:#0184bc;">\r</span><span>{cone}{2zn8yr} is defined as
+</span><span>    </span><span style="color:#a626a4;">\begin</span><span>{align*}
+</span><span>        </span><span style="color:#e45649;">C</span><span style="color:#a626a4;">^</span><span style="color:#0184bc;">\ominus </span><span style="color:#a626a4;">= </span><span style="color:#0184bc;">\set</span><span>{</span><span style="color:#e45649;">x</span><span style="color:#0184bc;">\in\hilber</span><span>}{</span><span style="color:#0184bc;">\sup\innerp</span><span>{</span><span style="color:#e45649;">C</span><span>}{</span><span style="color:#e45649;">x</span><span>} </span><span style="color:#0184bc;">\leq </span><span style="color:#c18401;">0</span><span>}.
+</span><span>    </span><span style="color:#a626a4;">\end</span><span>{align*}
+</span><span>
+</span><span>    </span><span style="color:#a626a4;">\begin</span><span>{theorem}[</span><span style="color:#e45649;">label</span><span>=6af37y, name=Cones of Proximal Operators]
+</span><span>        </span><span style="color:#a0a1a7;">% ...
+</span><span>    </span><span style="color:#a626a4;">\end</span><span>{theorem}
+</span><span style="color:#a626a4;">\end</span><span>{definition}
+</span></code></pre>
+<p>Both versions highlight how to define two nested notes. In Markdown the ID and title are implicitely define by convention of the header, while in LaTeX they are made explicit through the key definitions of the blocks. Nesting is also implicitely defined in Markdown. If the header level is larger, then the note is defined as the child of the previous one. On the other hand, in LaTeX this is explicit by nesting two blocks in each other and having indentation for better readability.</p>
+<p>Further linking to other notes is done with simple hyperrefs in markdown syntax, while in LaTeX I have a custom command <code>\r{&lt;label&gt;}{&lt;target&gt;}</code> for that.</p>
+<p>The Markdown version is much easier to read and less poluted by special commands, while the LaTeX version is much more flexible with custom commands and mathematical notation.</p>
+<p>For conversion I use the <a href="https://github.com/kivikakk/comrak">comrak</a> crate for Markdown, and the excellent <a href="https://tug.org/tex4ht/">TeX4ht</a> for LaTeX. Before passing the note to each processor, I extract it from previous and following notes. This is especially important for LaTeX, as it makes the compilation process much faster.</p>
+<p>As references can only point within a note set, I need a third file format for bibliography notes. Of course, I use the established <code>bibtex</code> and support a third file format with <code>*.bib</code>. BibTeX are currently not rendered to HTML and instead silently dropped when published to Mastodon. They support a <code>file</code> key though and additional metadata which is shown in Vim.</p>
+<h3 id="watching-changes-with-sixel-characters"><a class="zola-anchor" href="#watching-changes-with-sixel-characters" aria-label="Anchor link for: watching-changes-with-sixel-characters"></a>
+Watching changes with Sixel characters</h3>
+<p>Because the LaTeX format is so complicated, I need live preview when writing notes.</p>
+<p>The Sixel format defines an ASCII standard for printing graphics to terminal emulators. Many emulators are supporting this already, you can find a complete list at <a href="https://www.arewesixelyet.com/">Are we Sixel yet?</a>. I use a patches version of Alacritty.</p>
+<p>Further, I recently found out that TMux also supports Sixel in their latest version. This is awesome, because it means I can create a split pane with editor on one side, live preview on the other side on a remote server. When I want to continue working on notes, I can just re-attach the session from any computer.</p>
+<p>In total this looks like this (rendering with headless chromium)</p>
+<figure>
+	<p><img src="./preview.gif" alt="Preview" /></p>
+
+	
+	<figcaption>
+		<a href="#figure-1">Figure 1.</a>
+		Preview of ztl tool
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h3 id="toots-and-notes"><a class="zola-anchor" href="#toots-and-notes" aria-label="Anchor link for: toots-and-notes"></a>
+Toots and Notes</h3>
+<p>When reading things up, it would be great to have notes available on the browser or on smartphone.</p>
+<p>Because we already have rendered HTML in our compiled note set, publishing notes to Mastodon is simple. For <a href="https://github.com/bytesnake/ztl">ztl</a> there is a subcommand <code>ztl publish</code>, which toots new notes, edits already existing if their content changed and deletes old notes on the Mastodon instance. Tooting is driven by the <a href="https://toot.bezdomni.net/introduction.html">toot</a> Mastodon CLI tool.</p>
+<p>To work properly I had to customize one instance with larger character size (HTML can be pretty long), and allow the <a href="https://developer.mozilla.org/en-US/docs/Web/MathML/Element">MathML tags</a>.</p>
+<p>Mastodon fits nicely because</p>
+<ul>
+<li>parent notes are just toots which we reply to and rendered in threading mode</li>
+<li>memos can be attached to notes and collected with an apropriate hashtag</li>
+<li>changes of toots are available and displayed similar like Git differences</li>
+</ul>
+<p>In total, a threaded note view looks like this</p>
+<img src="./mastodon.png" width="400px" />
+<h3 id="comments-on-rust"><a class="zola-anchor" href="#comments-on-rust" aria-label="Anchor link for: comments-on-rust"></a>
+Comments on Rust</h3>
+<p>Rust is a natural fit for text processing command line tools. It is fast, expressive and has excellent tooling for development.</p>
+<p>No suprise for used crates, I have <a href="https://github.com/clap-rs/clap">clap</a> for argument parsing, use <a href="https://serde.rs/">serde</a> for TOML processing and <a href="https://github.com/dtolnay/anyhow">anyhow</a> for error wrapping. Further I used <a href="https://docs.rs/scraper/latest/scraper/">scraper</a> for HTML post-processing and <a href="https://github.com/kivikakk/comrak">comrak</a> for Markdown processing. The TeX4ht tools are directly called as an external binary, same for the Mastodon integration. The development process felt super straightforward and pretty rewarding for me.</p>
+<p>Parsed note information has the <a href="https://github.com/bytesnake/ztl/blob/main/src/notes.rs#L38">following structure</a> and are collected into <code>.ztl/cache/&lt;key&gt;</code> files in TOML format</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span>#[</span><span style="color:#e45649;">derive</span><span>(Debug, Serialize, Deserialize)]
+</span><span style="color:#a626a4;">pub</span><span>(</span><span style="color:#a626a4;">crate</span><span>) </span><span style="color:#a626a4;">struct </span><span>Note {
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">id</span><span>: Key,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">header</span><span>: String,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">parent</span><span>: Option&lt;Key&gt;,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">outgoing</span><span>: Vec&lt;Outgoing&gt;,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">incoming</span><span>: Vec&lt;Key&gt;,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">html</span><span>: String,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">span</span><span>: Span,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">file</span><span>: Option&lt;String&gt;,
+</span><span>    </span><span style="color:#a626a4;">pub </span><span style="color:#e45649;">hash</span><span>: String,
+</span><span>}
+</span></code></pre>
+<p>I will extend on the technical side a bit, once I found time to improve documentation of the repository.</p>
+<h3 id="wrapping-up"><a class="zola-anchor" href="#wrapping-up" aria-label="Anchor link for: wrapping-up"></a>
+Wrapping up</h3>
+<p>In summary I’m very happy with the current iteration of <code>ztl</code>. It is persistent through terminal multiplexing, powerful enough to encode any content and simple enough that it can be extended in future iterations.</p>
+<p>Futher, I can work through text with modal editing, while at the same time read on any computer or smartphone in this world.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-11-10">10 November 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

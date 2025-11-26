@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+                
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;note-picker&#x2F;">A Telescope picker for ZTL</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>Navigating a set of notes is central for a useful note
+taking system. I recently designed a custom note picker for
+ZTL and aplied ideas of modal editing to its function.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-10-30">30 October 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;genetic-brainfuck&#x2F;">Learning behavior of BF programs</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>In this post, we will generate populations of programs consisting
+of only <em>eight</em> instructions and optimize their fitness to reproduce
+a target behaviour (for example reversing a sequence) with
+<em>genetic programming</em>.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-09-09"> 9 September 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;self-modifying&#x2F;">Self-modifying configuration pattern</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>One of the interesting, and hard aspect of calisthenics, is the ability to
+progress between movements in <a href="https://docs.google.com/spreadsheets/d/1a8tlZ-zbF695HA3Lmm20OIYeYYxo1lmUOczUXKLoL4s/edit?gid=1833143925#gid=1833143925">many different ways</a>.
+In contrast to classical weight training, the target is not being able to lift
+a <em>certain</em> amount of weight over a <em>certain</em> amount of repetitions – but being
+able to move into a position and hold for some time.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Classical axes of movements are divided into pulling vs. pushing and
+vertically vs. horizontally. For example, handstand is a vertical pushing
+movement.</p>
+</div>
+<p>I was recently loooking for ways to track exercise progressions long-term. As I
+found existing applications not customizable enough for my needs, I instead
+implemented a simple interval timer. What set it aparts from others, is that
+executions is sourced from <a href="https://toml.io/en/">TOML</a> files. Especially for
+intra-exercise progressions, I found a self-modifying pattern useful, where
+configuration keys can act on themselves.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-06-05"> 5 June 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;hd-oranges&#x2F;">Oranges in Many Dimensions</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>
+Peeling    oranges    in
+high                                                                               dimensionality
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><mrow><mi>k</mi> <mo class="MathClass-rel">≫</mo> <mn>3</mn></mrow></math>
+is hard. This post discusses a fundamental phenomenon in asymptotic geometry
+and explains at which rate you should peel an orange.
+</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-03-29">29 March 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;notes&#x2F;">Writing notes like it&#x27;s (almost) 2025</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>I wrote a new iteration of my note system during a week vacation from home. Motivated with two recent observations, that the system I want to built is actually a static note generator, and that Mastodon is a good fit for publishing and reviewing notes, I created a tool called <a href="https://github.com/bytesnake/ztl">ztl</a>.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-11-10">10 November 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;belle-qui&#x2F;">Transcription of a Pavane</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>A transcription of Belle qui tiens ma vie I created with Musescore for playing on Gambe and singing together.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-11-08"> 8 November 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;conmon&#x2F;">Solutions to Convex Analysis and Monotone Operator Theory book</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>I recently started with some exercises of the comprehensive
+convex analysis and monotone operator book by Bauschke and
+Combettes. It is an excellent source for self-studying and
+a good fit for a student with EE math background.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-11-07"> 7 November 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;viola-da-gamba&#x2F;">Playing the viol</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>At the beginning of the year I started practicing a new instrument and took since then classes for a bass Viola da Gamba. After around 10 month of regular sessions, I slowly developed enough dexterity to play simple tunes. This post contains a brief resume of observations of the past months and shows some music of the Gambe.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-10-31">31 October 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;sp-identity&#x2F;">A profound identity in signal processing</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>Arguably one of the most important identities in signal processing is the following theorem.</p>
+<div style="margin:0 auto;text-align:center">
+    <object data="/sp-identity/identity.svg" width="500"> </object>
+</div>
+<p>The identity is known as Moreau’s decomposition and instantiates into useful applications for variational analysis, convex optimization and signal processing. This post will explain the symbolic meaning and implication of this theorem for signal processing.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-08-11">11 August 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                    
+    <article class="post-list">
+        <header> 
+            <h1>
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;rust-inference&#x2F;">Building standalone model binaries for audio inference</a>
+            </h1>
+        </header>
+
+        
+        <div class="content post-summary">
+            <p>For a recent problem I had to crawl and categorize
+a large number of audio files from the internet.
+As the bottleneck was deemed to be downstream link
+I decided to use a pre-trained event
+classification model and run inference on the CPU.</p>
+<p>Another requirement was that the crawler were
+running on multiple server and consistent for
+several weeks. My choice of language for such
+infrastructure heavy task is Rust and I looked
+into ways how to deploy an inference model.</p>
+<p>It turned out that the process for creating a
+standalone binary in Rust is pretty simple. Even
+better, wrapping a model pre-trained on a large
+event classification dataset is possible.
+This means that in the end I could just copy the
+binary to any x86 machines and run them, without
+the need to setup virtual environments or install
+any packages.</p>
+<p>In this post I will demonstrate how to convert a
+pre-trained model to ONNX and put it into a
+binary. Our goal is to create a standalone
+executable taking samples from stdin and
+classifying them into 527 known audio classes.</p>
+        </div>
+        
+        
+        
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2024-08-10">10 August 2024</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+    </article>
+
+                
+                
+    <div class="pagination">
+        <div class="left pagination-item disabled">
+            
+        </div>
+        <div class="right pagination-item ">
+            
+            <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;page&#x2F;2&#x2F;">To older posts</a>
+            
+        </div>
+    </div>
+
+                
+            
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

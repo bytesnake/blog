@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Personal Network Braindump</h1>
+    </header>
+    <div class="content">
+        <p>We strive for a human-centric, personal network with
+interactions between humans. No consistent view of things
+required, and no central server.</p>
+<span id="continue-reading"></span>
+<p>Your personal data should be strongly attached to a
+service and easy to move between server.</p>
+<p>It should be fun to hack and tinker with the network. If you
+want to write The Capybara Network, you only need to fill
+out some logic code, then everyone in the network should be
+able to use your library to integrate into their pods.</p>
+<h2 id="periphery"><a class="zola-anchor" href="#periphery" aria-label="Anchor link for: periphery"></a>
+Periphery</h2>
+<p>The periphery server fulfills three functions. It executes
+pods, ensures that identity of people and capabilities are
+distributed through the network and forwards messages from
+outboxes to other periphery inboxes.</p>
+<p>The communication between periphery server happen
+unencrypted. Either the messages are signed by the person
+(for example issuing a keypair on behalf of someone) <em>or</em>
+message payloads are already encrypted with publicly
+available keys.</p>
+<p>The periphery server has a friends server list, to which we
+publish changes in provided capabilities. If the current
+server hosts no pod of an identity, only the <code>hey</code> pod is
+referenced.</p>
+<p>Furthermore, it allows easy migration of pods between
+server, such that no interruption is in the processing of
+incoming messages found.</p>
+<p>Move to identity note:</p>
+<blockquote>
+<p>The main communication tool centers around protocols defined
+by pairs of identifiers and capabilities. Every identity of
+a person is unique, same as every capability is unique.</p>
+<p>To distinguish several pods offering the same capabilities
+(for example git social features), we also introduce a third
+element which is the associated name. This triple has to be
+unique.</p>
+</blockquote>
+<p><em><strong>relation to microkernel</strong></em> In function the approach can
+be compared to microkernels, where the periphery (there
+supervisor) executes several servers in user-mode and
+ensures the communication between them.</p>
+<h2 id="identity-and-behalfs"><a class="zola-anchor" href="#identity-and-behalfs" aria-label="Anchor link for: identity-and-behalfs"></a>
+Identity and Behalfs</h2>
+<p>Every person in the network is strongly identified by their
+public key fingerprint. It also acts as a token for
+discovering capabilities a person supports. (for example
+leaving a message)</p>
+<p>The setup mostly follows GnuPG. We store a keypair on the
+personal computer and issue certificates for pods
+distributed in the periphery. The personal public key is
+distributed to all servers, together with the signatures of
+the tuple (pod endpoint, public key).</p>
+<p>When moving the pod to a different server, the keypair has
+to be renewed with the new server endpoint signed. We also
+advise adding a expiry time.</p>
+<img src="https://ssbc.github.io/scuttlebutt-protocol-guide/img/follow_graph.png" width=600 />
+<h2 id="of-boxes"><a class="zola-anchor" href="#of-boxes" aria-label="Anchor link for: of-boxes"></a>
+Of Boxes</h2>
+<p>Pods internal logic orchestrate communication flow between
+people and can issue one-to-many communication (for example
+listing all Git pods of a person), multi-hop dependencies
+(getting participants of a Git issue, then their mail
+addresses) and long-running multi-response messages
+(subscription or paging of long messages).</p>
+<p>The periphery abstracts the task of <a href="https://bytesnake.github.io/blog/personal-network/proposal/53jq18">transporting</a> messages from
+home to recipients server. Similar to the ActivityPub
+protocol, this happens with concepts of boxes. Every pod has
+a pair of inbox and outbox. The periphery distributes
+incoming messages to matching inboxes and forwards messages
+lying in outboxes to the matching server.</p>
+<p><em><strong>lifecycle of communication</strong></em> Putting a message into the
+outbox has the following signature</p>
+<blockquote>
+<p>(Vec<Recipient>, Capability, Payload) -&gt; ResponseToken.</p>
+</blockquote>
+<p>The periphery normalizes the list of recipients and matches
+the capability fingerprint with available servers. It then
+encrypts the message with public keys of all recipients. It
+also appends the response token for the other periphery
+server to use in their response.</p>
+<p>The receiving server matches the message, puts it into the
+inbox of the corresponding pod which then processes the
+message and generates one (or many) responses with the
+response token attached. The other server then forwards
+messages again to the home server in the same way.</p>
+<p><img src="https://www.w3.org/TR/activitypub/illustration/tutorial-2.png" alt="Boxes" /></p>
+<h2 id="necessity-of-async-execution-within-pods"><a class="zola-anchor" href="#necessity-of-async-execution-within-pods" aria-label="Anchor link for: necessity-of-async-execution-within-pods"></a>
+Necessity of async execution within pods</h2>
+<p>Some routines can be modeled with sync execution only, such
+as asking for CLI commands, setting up virtual file system
+with FUSE. Others, on the other hand, benefit immensely from
+being able to write execution logic in asynchronous way. A
+prominent example are TUIs fetching and displaying data from
+external sources.</p>
+<p>The WASM model currently allows declaring functions as async
+in <em><strong>wasmtime</strong></em>, which processes all functional calls as
+non-blocking. On the other hand, <em><strong>wstd</strong></em> brings a full
+async executor into the WASM application, which supports the
+WASIp2 standard.</p>
+<p>To communicate with other pods, messages are put into
+mailboxes of the federation server and forwarded to
+individual pods, which are then answering their calls.</p>
+<p>To schedule correct order of execution with dependencies
+spanning multiple pods, asnychronous execution is essential.
+For example, to get a photo made with a friends, we can
+imagine the following dependencies:</p>
+<blockquote>
+<p>fetch friends -&gt; filter by name -&gt; get photo at friend’s pod</p>
+</blockquote>
+<h2 id="capability-fingerprint"><a class="zola-anchor" href="#capability-fingerprint" aria-label="Anchor link for: capability-fingerprint"></a>
+Capability Fingerprint</h2>
+<p>The system organizes around capabilities, describing
+abilities of a connected identifier. They are unique and
+strongly attached to the supporting API.</p>
+<p>When posting a message into the <em><strong>outbox</strong></em> of the
+periphery, the message contains a recipients field together
+with the capability fingerprint. (and maybe a name to
+distinguish multiple instances)</p>
+<p>The periphery resolves the server of recipients and
+negotiate the proper calling convention with their server.
+Once, both match (user and protocol) the message is
+forwarded to the <em><strong>inbox</strong></em> of all recipients.</p>
+<p>This makes interfaces <em><strong>immutable</strong></em> and only appendable
+with new sets of interfaces, which may supersede old ones.</p>
+<p>Pods with proper subsets of protocols may still use those
+partials to communicate with supersets. But missing
+functionality cannot be replaced for and should return an
+missing implementation error.</p>
+<h2 id="abstracting-capabilities-away"><a class="zola-anchor" href="#abstracting-capabilities-away" aria-label="Anchor link for: abstracting-capabilities-away"></a>
+Abstracting Capabilities Away</h2>
+<p>Pods are human-centric. A developer should just be able
+to write a list of supported functions and the library
+should fill in all the remaining bits.</p>
+<p>This includes</p>
+<ul>
+<li>generating functions the sender side can use to create a
+message and wait for the response</li>
+<li>creating a structure for arguments and response, which is
+serializable</li>
+<li>generate a unique capability fingerprint, representing
+the API</li>
+</ul>
+<p>Rust proc-macro system is capable of all. We can sketch the
+following:</p>
+<pre data-lang="rust" style="background-color:#fafafa;color:#383a42;" class="language-rust "><code class="language-rust" data-lang="rust"><span style="color:#a626a4;">struct </span><span>GitRepo {
+</span><span>    </span><span style="color:#e45649;">issues</span><span>: Vec&lt;Issue&gt;,
+</span><span>    </span><span style="color:#e45649;">prs</span><span>: Vec&lt;PR&gt;,
+</span><span>}
+</span><span>
+</span><span>#[</span><span style="color:#e45649;">capability</span><span>]
+</span><span style="color:#a626a4;">impl </span><span>GitRepo {
+</span><span>    </span><span style="color:#a626a4;">fn </span><span style="color:#0184bc;">add_issue</span><span>(</span><span style="color:#a626a4;">&amp;mut </span><span style="color:#e45649;">self</span><span>, </span><span style="color:#e45649;">sender</span><span>: Person, </span><span style="color:#e45649;">issue</span><span>: Issue) -&gt; Future&lt;()&gt; {
+</span><span>        </span><span style="color:#a0a1a7;">// check sender has the access rights for adding an issue
+</span><span>        </span><span style="color:#a0a1a7;">// this may call to the home server
+</span><span>        </span><span style="color:#e45649;">self</span><span>.</span><span style="color:#0184bc;">check_access</span><span>(</span><span style="color:#a626a4;">&amp;</span><span>sender).await</span><span style="color:#a626a4;">?</span><span>;
+</span><span>        </span><span style="color:#e45649;">self</span><span>.issues.</span><span style="color:#0184bc;">push</span><span>(issue);
+</span><span>
+</span><span>        Ok(())
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>What are examples of crates doing this?</p>
+<h2 id="human-interacting-with-pods"><a class="zola-anchor" href="#human-interacting-with-pods" aria-label="Anchor link for: human-interacting-with-pods"></a>
+Human Interacting with Pods</h2>
+<p>For now, we have only described how pods are defined and
+how they interact with each other. To also have human
+interactions, pods need to define human interfaces.</p>
+<p>For simplicity, we initially only support text interfaces
+and everything-is-a-file paradigm. Both are communicated
+with the SSH protocol to reduce periphery complexity.</p>
+<p>From the pod perspective, we define a function when someone
+logs into SSH and render a TUI with given stdout/stdin. For
+file support via SFTP, we have open/read/write/readdir to
+render a view of the current pod state into a virtual
+filesystem.</p>
+<p>At the user side we can connect via ssh or sshfs to both and
+can identify with a special token signed with the person
+private key. The periphery hosts the actual SSH server and
+multiplexes calls to the individual pods.</p>
+<h2 id="imaginable-ways-to-render-views"><a class="zola-anchor" href="#imaginable-ways-to-render-views" aria-label="Anchor link for: imaginable-ways-to-render-views"></a>
+Imaginable ways to render views</h2>
+<p>The following ways are possible for rendering the content of
+a pod for different consumption</p>
+<ul>
+<li>offer editable file system via FUSE
+<ul>
+<li>add a WASI interface to register a set of files</li>
+<li>present the content of a pod formated via files</li>
+<li>trigger mutation events when files are saved</li>
+</ul>
+</li>
+<li>SSH server for TUI interface
+<ul>
+<li>connect to builtin TUI interface via SSH client</li>
+<li>provide modal interface to modify and view content</li>
+<li>take inspiration from https://github.com/Eugeny/russh/blob/main/russh/examples/ratatui_app.rs</li>
+<li>create WASI interface which binds an SSH server to a
+port and provides a write/read methods which are called
+upon changes</li>
+</ul>
+</li>
+<li>CLI interface from supervisor
+<ul>
+<li>use allow-external from clap https://docs.rs/clap/latest/clap/struct.Command.html#method.allow_external_subcommands
+to dispatch commands to pods</li>
+</ul>
+</li>
+</ul>
+<h2 id="dealing-with-files-and-streams"><a class="zola-anchor" href="#dealing-with-files-and-streams" aria-label="Anchor link for: dealing-with-files-and-streams"></a>
+Dealing with files and streams</h2>
+<p>Boxes are for messaging only. To transmit larger files (for
+examples images) or have streaming support (one could
+imagine audio chats), we support a special direct
+communication approach.</p>
+<p>The periphery supports a stateful bidirectional connection
+with token identifier. The tokens form a flat hierarchy
+without any hash, names or groups, and can be used to read
+from and write to.</p>
+<h2 id="ideas-for-pods"><a class="zola-anchor" href="#ideas-for-pods" aria-label="Anchor link for: ideas-for-pods"></a>
+Ideas for Pods</h2>
+<p>Some random ideas what patterns could fit into pods</p>
+<ul>
+<li>
+<p><em><strong>Hey Pod</strong></em> Represent trusted people fingerprints</p>
+<p>Build a web of trusted people by signing their public
+keys. Add small messages to their personal spaces,
+similar to friend books.</p>
+</li>
+<li>
+<p><em><strong>Git Pod</strong></em> Augment Git with additional social features</p>
+<p>Bundle Git repository with pod WASM file and offer
+capabilities for submitting patches, creating issues and
+hosting small wikis</p>
+</li>
+<li>
+<p><em><strong>Book Sharing Pod</strong></em> Comment books and share them</p>
+<p>Ask for books and send them to your friends via DHL
+Packstation</p>
+</li>
+<li>
+<p><em><strong>Language Pod</strong></em></p>
+</li>
+<li>
+<p><em><strong>Podcast Pod</strong></em></p>
+</li>
+</ul>
+<h2 id="examples-of-other-federated-protocols"><a class="zola-anchor" href="#examples-of-other-federated-protocols" aria-label="Anchor link for: examples-of-other-federated-protocols"></a>
+Examples of other federated protocols</h2>
+<p><em><strong>Scuttlebutt</strong></em> is a service for hosting distributed
+social networks and ensuring that content disseminate
+untampered through the network.</p>
+<p><em><strong>AT Protocol</strong></em> supports the Bluesky service and allows
+separation of user data from indexing.</p>
+<p><em><strong>ActivityPub</strong></em> is the default model for many federated
+service with the largest provider, Mastodon.</p>
+<p><em><strong>Aether</strong></em> provides many-to-many communication in a
+distributed manner.</p>
+<h2 id="minimal-viable-product"><a class="zola-anchor" href="#minimal-viable-product" aria-label="Anchor link for: minimal-viable-product"></a>
+Minimal viable product</h2>
+<p>A minimal useable prototype of a pod system contains the
+following abilities:</p>
+<ul>
+<li>storing some state which can be restored after a session</li>
+<li>allowing interaction with CLI</li>
+<li>some editing with files</li>
+</ul>
+<p>Build web-of-trust with OpenPGP and simple leave a message
+for a friend function.</p>
+<h2 id="what-we-do-not-want-to-do"><a class="zola-anchor" href="#what-we-do-not-want-to-do" aria-label="Anchor link for: what-we-do-not-want-to-do"></a>
+What we do not want to do</h2>
+<p>Create a blockchain-like structure with immutable,
+append-only, data using something like a Merkle tree.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-10-09"> 9 October 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Preview unread&#x2F;total number of emails in i3status</h1>
+    </header>
+    <div class="content">
+        <p>I recently added a small section to my <code>i3status</code> bar with the number of unread emails and total emails. In order to avoid having thunderbird open all the time, I also added a wrapper which puts it into headless mode.</p>
+<span id="continue-reading"></span><h2 id="extending-status-bar"><a class="zola-anchor" href="#extending-status-bar" aria-label="Anchor link for: extending-status-bar"></a>
+Extending status bar</h2>
+<p>The vanilla <code>i3status</code> is a bit inflexible when it comes to the extendibility. You can add content from a file, but not from a command output. Because of that I went for the combination of <code>crontab</code> and a small script which writes the bar snippet to a file.</p>
+<p>The script looks into thunderbird’s user directory and counts the number of unread/total emails (this only works for a single folder and a single email address). The following script does:</p>
+<ol>
+<li>look into <code>.thunderbird/c9rt7s6i.default-release/ImapMail/groupware.fau.de/INBOX.msf</code> and counts the number of mails</li>
+<li>if no new mail arrived writes <code>M: &lt;unread&gt;/&lt;total&gt;</code> into <code>/tmp/mail_counter</code></li>
+<li>if new emails arrived colors the output in green</li>
+</ol>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#a0a1a7;">#!/bin/bash
+</span><span>
+</span><span style="color:#e45649;">new_mails</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">$(</span><span style="color:#e45649;">grep </span><span style="color:#50a14f;">&#39;(^A2=&#39; .thunderbird/c9rt7s6i.default-release/ImapMail/groupware.fau.de/INBOX.msf </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">tail -n1 </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">sed -r </span><span style="color:#50a14f;">&#39;s/.*\(\^A2=(\w+)\).*/\1/&#39; </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">xargs -n1 -L1 --replace</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">__ printf &#39;%d\n&#39; &#39;0x__&#39;)
+</span><span style="color:#e45649;">total_mails</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">$(</span><span style="color:#e45649;">grep </span><span style="color:#50a14f;">&#39;(^A1=&#39; .thunderbird/c9rt7s6i.default-release/ImapMail/groupware.fau.de/INBOX.msf </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">tail -n1 </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">sed -r </span><span style="color:#50a14f;">&#39;s/.*\(\^A1=(\w+)\).*/\1/&#39; </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">xargs -n1 -L1 --replace</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">__ printf &#39;%d\n&#39; &#39;0x__&#39;)
+</span><span>
+</span><span style="color:#a626a4;">if </span><span style="color:#0184bc;">[ </span><span>$</span><span style="color:#e45649;">new_mails -eq</span><span> 0 </span><span style="color:#0184bc;">]</span><span style="color:#a626a4;">; then
+</span><span>    </span><span style="color:#0184bc;">echo </span><span style="color:#50a14f;">&quot;M: &quot;</span><span>$</span><span style="color:#e45649;">new_mails</span><span style="color:#50a14f;">&quot;/&quot;</span><span>$</span><span style="color:#e45649;">total_mails </span><span style="color:#a626a4;">&gt;</span><span> /tmp/mail_counter
+</span><span style="color:#a626a4;">else
+</span><span>    </span><span style="color:#0184bc;">echo </span><span style="color:#50a14f;">&quot;&lt;span color=&#39;#00FF00&#39;&gt;M: &quot;</span><span>$</span><span style="color:#e45649;">new_mails</span><span style="color:#50a14f;">&quot;/&quot;</span><span>$</span><span style="color:#e45649;">total_mails</span><span style="color:#50a14f;">&quot;&lt;/span&gt;&quot; </span><span style="color:#a626a4;">&gt;</span><span> /tmp/mail_counter
+</span><span style="color:#a626a4;">fi;
+</span></code></pre>
+<p>After putting it to a reachable location (for me it is <code>~/.local/bin/check-email.sh</code>) and making the script executable, add a new crontab rule with <code>$ crontab -e</code> and decide how often you want to look this up:</p>
+<pre style="background-color:#fafafa;color:#383a42;"><code><span>*/5  *    * * *	lorenz	/home/lorenz/.local/bin/check-email.sh
+</span></code></pre>
+<p>You know have to add a section to your i3 status bar for this file:</p>
+<pre style="background-color:#fafafa;color:#383a42;"><code><span>order += &quot;read_file mailcounter&quot;
+</span><span>
+</span><span>...
+</span><span>
+</span><span>read_file mailcounter {
+</span><span>    path = &quot;/tmp/mail_counter&quot;
+</span><span>    color_good = &quot;#FFFFFF&quot;
+</span><span>}
+</span></code></pre>
+<p>which looks in every update cycle into your generated file. And voilà you have an email counter in you status bar.</p>
+<h2 id="start-thunderbird-in-headless-mode-during-login"><a class="zola-anchor" href="#start-thunderbird-in-headless-mode-during-login" aria-label="Anchor link for: start-thunderbird-in-headless-mode-during-login"></a>
+Start thunderbird in headless mode during login</h2>
+<p>I don’t want to have thunderbird open all the time, but then the script doesn’t work anymore. Unfortunately there is no way to mix headless and GUI mode in thunderbird, so I wrote a small wrapper which does this:</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#a0a1a7;">#!/bin/bash
+</span><span>
+</span><span style="color:#a0a1a7;"># kill old session (we can&#39;t do `killall thunderbird` here, that would kill this script)
+</span><span style="color:#e45649;">TB_PID</span><span style="color:#a626a4;">=</span><span style="color:#50a14f;">$(</span><span style="color:#e45649;">ps</span><span style="color:#50a14f;"> faux </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">grep </span><span style="color:#50a14f;">&#39;/usr/lib/thunderbird/thunderbird&#39; </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">grep -vw</span><span style="color:#50a14f;"> grep </span><span style="color:#a626a4;">| </span><span style="color:#e45649;">awk </span><span style="color:#50a14f;">&#39;{ print $2 }&#39; )</span><span style="color:#a626a4;">;
+</span><span style="color:#0184bc;">kill </span><span>${</span><span style="color:#e45649;">TB_PID</span><span>}
+</span><span>
+</span><span style="color:#a0a1a7;"># start thunderbird with head and after that start headless mode again
+</span><span style="color:#e45649;">/usr/bin/thunderbird</span><span style="color:#a626a4;">; </span><span style="color:#e45649;">/usr/bin/thunderbird --headless
+</span></code></pre>
+<p>It basically looks up the PID of headless thunderbird and kills it, then starts in GUI mode and afterwards restarts it into headless mode. I put this script to <code>/usr/local/bin/thunderbird</code> so that it overwrites the default path.</p>
+<p>You still have to start thunderbird in headless mode during login, I extended my <code>~/.profile</code> with</p>
+<pre data-lang="bash" style="background-color:#fafafa;color:#383a42;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#e45649;">/usr/bin/thunderbird --headless </span><span style="color:#a626a4;">&amp;
+</span></code></pre>
+<p>and you should be good to go.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2021-07-01"> 1 July 2021</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

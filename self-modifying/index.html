@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog&#x2F;about&#x2F;me">About Me</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;github.com&#x2F;bytesnake"><img height="28px" src="https://bytesnake.github.io/blog/github.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Self-modifying configuration pattern</h1>
+    </header>
+    <div class="content">
+        <p>One of the interesting, and hard aspect of calisthenics, is the ability to
+progress<sup class="footnote-reference"><a href="#1">1</a></sup> between movements in <a href="https://docs.google.com/spreadsheets/d/1a8tlZ-zbF695HA3Lmm20OIYeYYxo1lmUOczUXKLoL4s/edit?gid=1833143925#gid=1833143925">many different ways</a>.
+In contrast to classical weight training, the target is not being able to lift
+a <em>certain</em> amount of weight over a <em>certain</em> amount of repetitions – but being
+able to move into a position and hold for some time.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Classical axes of movements are divided into pulling vs. pushing and
+vertically vs. horizontally. For example, handstand is a vertical pushing
+movement.</p>
+</div>
+<p>I was recently loooking for ways to track exercise progressions long-term. As I
+found existing applications not customizable enough for my needs, I instead
+implemented a simple interval timer. What set it aparts from others, is that
+executions is sourced from <a href="https://toml.io/en/">TOML</a> files. Especially for
+intra-exercise progressions, I found a self-modifying pattern useful, where
+configuration keys can act on themselves.</p>
+<span id="continue-reading"></span>
+<p>To keep implementation complexity low, I’ve written a small, static webapp,
+where you can upload a set of exercises of TOML files. It then executes them
+and offers a progressed version at the end, for the next session.</p>
+<p>For example, the Tuck Lever exercise is defined with a header of</p>
+<pre data-lang="toml" data-name="https://github.com/bytesnake/blog/blob/master/content/self-modifying/pure-bodyweight.toml#L198-L206" style="background-color:#fafafa;color:#383a42;" class="language-toml "><code class="language-toml" data-lang="toml" data-name="https://github.com/bytesnake/blog/blob/master/content/self-modifying/pure-bodyweight.toml#L198-L206"><span>[tuck-front-lever]
+</span><span style="color:#e45649;">tags </span><span>= [ </span><span style="color:#50a14f;">&quot;bodyweight&quot; </span><span>]
+</span><span style="color:#e45649;">text </span><span>= </span><span style="color:#50a14f;">&quot;&quot;&quot;
+</span><span style="color:#50a14f;">## Tuck Front Lever
+</span><span style="color:#50a14f;"> 
+</span><span style="color:#50a14f;"> - begin in a hang position and pull up into front lever position
+</span><span style="color:#50a14f;"> - pull should blades down, packed shoulder feeling
+</span><span style="color:#50a14f;">&quot;&quot;&quot;
+</span><span style="color:#e45649;">media </span><span>= </span><span style="color:#50a14f;">&quot;https://workout-temple.com/wp-content/uploads/2022/11/sideview-tucked-front-lever.jpg&quot;
+</span></code></pre>
+<p>This renders a simple start screen with all information needed:</p>
+<figure>
+	<img src="example.png" />
+	
+	<figcaption>
+		<a href="#figure-1">Figure 1.</a>
+		
+    Example start screen for the Tuck Front Lever exercise. Tapping on start displays interval 
+    timer for this isometric exercise. Link on the left side, initiates a download with updated
+    configuration set for next session.
+
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>A main design question is how to implement all the specific progression for
+exercises. Some consists of simple on-off phases, others have multi-stage
+exercises, again other progress in changing the movement altogether. To
+accommodate all of these possible progressions, I quickly realized that no
+built-in system would suffice.</p>
+<p>Instead, I moved the programmatic part from the webapp to the configuration
+file, and described the possible progression actions as fields with associated
+JS snippets. The file acts on itself, is hence self-modifying.
+Again for the Tuck Front Lever, we have only a single action, that of
+decreasing pause between sets:</p>
+<pre data-lang="toml" style="background-color:#fafafa;color:#383a42;" class="language-toml "><code class="language-toml" data-lang="toml"><span>[tuck-front-lever.mods.decrease-pause]
+</span><span style="color:#e45649;">name </span><span>= </span><span style="color:#50a14f;">&quot;Decrease Pause&quot;
+</span><span style="color:#e45649;">action </span><span>= </span><span style="color:#50a14f;">&quot;&quot;&quot;
+</span><span style="color:#50a14f;">for (const elm of cfg[&quot;config&quot;][&quot;conduct&quot;]) {
+</span><span style="color:#0997b3;">\t</span><span style="color:#50a14f;">if(elm[&quot;kind&quot;] != &quot;pause&quot;)
+</span><span style="color:#0997b3;">\t\t</span><span style="color:#50a14f;">continue;
+</span><span style="color:#50a14f;">
+</span><span style="color:#0997b3;">\t</span><span style="color:#50a14f;">elm[&quot;length&quot;] *= 0.75;
+</span><span style="color:#50a14f;">}
+</span><span style="color:#50a14f;">&quot;&quot;&quot;
+</span></code></pre>
+<p>After the exercises ends, you can select whether to progress, or not:</p>
+<figure>
+	<img src="example2.png" />
+	
+	<figcaption>
+		<a href="#figure-2">Figure 2.</a>
+		 Finish screen for Tuck Front Lever progression.
+&#x27;Decrease Pause&#x27; executes associated snippets and modifies the configuration
+file. &#x27;Do Nothing&#x27; keeps the current state and does not modify content.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>The link on the left downloads the modified file. Pretty simple and flexible.</p>
+<!-- vim: set linewidth=60 nowrap -->
+
+    </div>
+
+	
+	<h5 style="margin: 10px 0 10px 0">Changelog</h5>
+	<table class="changelog">
+		
+		<tr>
+			<td class="date">5 June, 2025 </td>
+			<td>Add blog post about self-modifying pattern</td>
+			<td class="link"><a href="https://github.com/bytesnake/blog/commit/5402284">5402284</a></td>
+		</tr>
+		
+		<tr>
+			<td class="date">15 October, 2025 </td>
+			<td>Add more context to self-modying post; Add example file</td>
+			<td class="link"><a href="https://github.com/bytesnake/blog/commit/6085a5b">6085a5b</a></td>
+		</tr>
+		
+	</table>
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2025-06-05"> 5 June 2025</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+<div class="responds">
+	<div class="sep">Discussion</div>
+
+	Have a suggestion or want to stay updated? Start a <a href="mailto:git@lorenzschmidt.com?subject=action%3Astartthread%20id%3Aj32oyb3" style="font-variant: small-caps">new thread</a> below or <a href="mailto:git@lorenzschmidt.com?subject=action%3Asubscribe" style="font-variant: small-caps">subscribe</a> by emailing me.
+
+	<div class="content">No comments yet!</div>
+</div>
+
+
+
+
+<div class="useful-links">
+	<div class="sep">Read Next</div>
+
+	<div class="content">
+	
+	<div>
+		<a class="title" href="https:&#x2F;&#x2F;ginoz.bearblog.dev&#x2F;people-actually-do-this-for-fun&#x2F;">People actually do this for fun?</a>
+		<span class="body">Leaving my house is in the top three things I stopped doing since the pandemic began, almost five years ago.</span>
+		<a class="via" href="bearblog.dev">via bearblog.dev</a>
+		<span class="date">01 Sept, 2025</span>
+	</div>
+	
+	</div>
+</div>
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2025 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
