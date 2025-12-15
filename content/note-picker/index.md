@@ -95,7 +95,9 @@ mode:
     {
       idleTimeLimit: 0.5,
       startAt: 6,
-      endAt: 22,
+      terminalLineHeight: 1.3,
+      poster: 'npt:0:21',
+      terminalFontFamily: "'JetBrainsMono Nerd Font', monospace"
     },
   );
 </script>
