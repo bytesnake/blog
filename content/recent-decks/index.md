@@ -1,24 +1,35 @@
 +++
-title = "Recent observations from recall practice"
+title = "Notes on Recall Practice"
 date = "2026-07-01"
+
+[extra]
+mailtoken = "05u3i1"
 +++
 
-Unordered notes on recall practice from [ZTL](https://codeberg.org/losch/ztl)
-exports. Topics are focus, tagging, math and physical learning and note-card
-combinations.
+For the last five month I have used spaced repetition again more
+extensively, not only for vocabulary learning, but also in other domains
+such as math and instrument learning.
+
+This post collects some observations I made, and gives examples how
+they are making life easier. The cards are generated with [ZTL](https://codeberg.org/losch/ztl) from my set of notes and imported to Anki.
 
 <!-- more -->
 
 ## Tagging is great
 
-Tagging[^1] provides more flexibility than rigid decks, whose topics are chosen 
-beforehand. You can have overlapping groups, such as studying grammar for all 
-languages or all card types of a single language. Furthermore, you can decide
-to study a specific group from your pool of cards, cross decks and cross topics.
+Tagging[^1] provides more flexibility than organizing cards rigidly into decks
+with pre-chosen topics. You can have overlapping groups, such as studying 
+grammar for all languages or all card types of a single language. 
+Furthermore, you can decide to study a specific group from your pool 
+of cards, cross decks and cross topics.
 
 [^1]: Read the [ankiweb](https://docs.ankiweb.net/searching.html#tags-decks-cards-and-notes) to understand how you can create filtered decks from tags. In my case this looks like `(tag:ztl is:new) OR (tag:ztl is:due)` filtering for new and due cards. You can combine tag lenses with _OR_ patterns.
 
-My current Anki decks looks like this:
+Furthermore, tags provide slightly more context when displaying
+the card and hence makes the review more immersive.
+
+My current Anki decks looks like this, all decks are custom Filtered Decks,
+only the "ZTL Export" is real:
 
 {% figure(id="1", caption="Overview of Filtered Decks created from monolithic ZTL export. VdG are Viola da Gamba practice cards, Suomi are my Finnish grammar and vocabulary cards. Notice that you can also group filtered decks in an hierarchy.") %}
     <img src="cards2.png" width=500 />
@@ -44,7 +55,7 @@ card or somehow cheated by looking up a partial solution, I will
 just postpone until tomorrow. That sounds like an obvious thing, but it
 gives my mind some time to forget or reorder the content.
 
-[^2]: The shortkey for postponing is the `-` symbol.
+[^2]: Postponing brings a card up again the next day, without changing it review cycle. The shortkey for postponing is the `-` symbol.
 
 Especially for my math exercises, I postpone until I come up with a
 solution. Then I recall for 3-4 more cycles, and finally set my
@@ -80,7 +91,8 @@ Another example is a note I want to recall with clozes attached. Then a simple:
 </card>
 ```
 
-generates clozes for the outer note
+generates clozes for the outer note, whose relevant parts are wrapped
+in spans with `d` class:
 
 {% figure(id="3", caption="Theorem with attached clozes, the back-side will reveal the missing parts.") %}
     <img src="cards4.png" width=600 />
@@ -98,3 +110,19 @@ of visualization in physical skill learning.
 > 
 > Use the physical deck when you have the opportunity to physically practice. 
 
+For dancing I find it difficult to imagine my whole body, but instrument
+playing is more limited in scope. For each definition, I create two cards.
+
+The first provides a description what to take attention to, and optionally
+an musical context, and asks for a recording with instrument.
+
+The second provides a recording, and asks for the list to take attention
+of. This card happens without instrument by only imaging playing it.
+
+{% figure(id="4", caption="Front side of the physical card. Provides context and a metronome to play. The suggestion shows a recording of the previous section. The back-side provides recording, which is then again used in the mental card and the next section.") %}
+    <img src="cards3.png" width=600 />
+{% end %}
+
+Of course, spaced repetition only works with yes-no responses, and not
+continuous variables such as playing speed. For me it counts when I
+can play or imagine playing the phrase without hesitation.
