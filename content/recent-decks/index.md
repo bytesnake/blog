@@ -119,7 +119,7 @@ an musical context, and asks for a recording with instrument.
 The second provides a recording, and asks for the list to take attention
 of. This card happens without instrument by only imaging playing it.
 
-{% figure(id="4", caption="Front side of the physical card. Provides context and a metronome to play. The suggestion shows a recording of the previous section. The back-side provides recording, which is then again used in the mental card and the next section.") %}
+{% figure(id="4", caption="Front side of the physical card. Provides context and a metronome to play. The suggestion shows a recording of the previous section. The back-side provides a button to record, which is then again used in the mental card and the next section.") %}
     <img src="cards3.png" width=600 />
 {% end %}
 
