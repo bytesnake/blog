@@ -37,10 +37,9 @@ smart_punctuation = true
 [extra]
 anpu_menu_links = [
     { url = "$BASE_URL", name = "Posts" },
-    { url = "$BASE_URL/about/me", name = "About Me" },
 ]
 
 social = [
     { url = "https://zettel.haus/@losch", image = "mastodon.svg"},
-    { url = "https://github.com/bytesnake", image = "github.svg"},
+    { url = "https://codeberg.org/losch/", image = "codeberg.svg"},
 ]
