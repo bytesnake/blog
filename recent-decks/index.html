@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta name="robots" content="all"/>
+    <meta name="keywords" content="music, baroque, mathematics, computer science, jitterbug, lindyhop, dancing, iterative, clarinet"/>
+
+    <title>Notes and Tones</title>
+    <meta name="description" content="Blog and personal site of Lorenz Schmidt.">
+    <link rel="icon" type="image/x-icon" href="https://bytesnake.github.io/blog/favicon.ico">
+
+    <meta property="og:url"                content="https://lorenzschmidt.com" />
+    <meta property="og:title"              content="Notes and Tones" />
+    <meta property="og:description"        content="Blog and personal website of Lorenz Schmidt" />
+    <meta property="og:locale"             content="en_US"/>
+    <meta property="og:type"               content="website"/>
+
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/main.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/recipe.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/lightgallery.min.css">
+    <link rel="stylesheet" href="https://bytesnake.github.io/blog/asciinema-player.css">
+
+    <script src="https://bytesnake.github.io/blog/lightgallery.min.js"></script>
+	<script src="https://bytesnake.github.io/blog/copycode.js" defer></script>
+	<script src="https://bytesnake.github.io/blog/asciinema-player.min.js "></script>
+
+    
+
+    
+    
+</head>
+<body>
+    <a class="skip-main" href="#main">Skip to content</a>
+	<a style="display: none" rel="me" href="https://zettel.haus/@losch">Mastodon</a>
+    <div class="container">
+		<div class="pattern"></div>
+        <header class="top-header"> 
+            <h1 class="site-header">
+                <a href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Notes and Tones</a>
+            </h1>
+            <nav>
+                
+                
+                
+                <a  href="https:&#x2F;&#x2F;bytesnake.github.io&#x2F;blog">Posts</a>
+                
+		<span class="socials">
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;zettel.haus&#x2F;@losch"><img height="28px" src="https://bytesnake.github.io/blog/mastodon.svg" /></a>
+                
+                
+		<a target="_blank" href="https:&#x2F;&#x2F;codeberg.org&#x2F;losch&#x2F;"><img height="28px" src="https://bytesnake.github.io/blog/codeberg.svg" /></a>
+                
+		</span>
+                
+            </nav>
+        </header>
+        <main id="main" tabindex="-1">
+            
+
+<article class="post">
+    <header>
+        <h1>Notes on Recall Practice</h1>
+    </header>
+    <div class="content">
+        <p>For the last five month I have used spaced repetition again more
+extensively, not only for vocabulary learning, but also in other domains
+such as math and instrument learning.</p>
+<p>This post collects some observations I made, and gives examples how
+they are making life easier. The cards are generated with <a href="https://codeberg.org/losch/ztl">ZTL</a> from my set of notes and imported to Anki.</p>
+<span id="continue-reading"></span><h2 id="tagging-is-great"><a class="zola-anchor" href="#tagging-is-great" aria-label="Anchor link for: tagging-is-great"></a>
+Tagging is great</h2>
+<p>Tagging<sup class="footnote-reference"><a href="#1">1</a></sup> provides more flexibility than organizing cards rigidly into decks
+with pre-chosen topics. You can have overlapping groups, such as studying
+grammar for all languages or all card types of a single language.
+Furthermore, you can decide to study a specific group from your pool
+of cards, cross decks and cross topics.</p>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>Read the <a href="https://docs.ankiweb.net/searching.html#tags-decks-cards-and-notes">ankiweb</a> to understand how you can create filtered decks from tags. In my case this looks like <code>(tag:ztl is:new) OR (tag:ztl is:due)</code> filtering for new and due cards. You can combine tag lenses with <em>OR</em> patterns.</p>
+</div>
+<p>Furthermore, tags provide slightly more context when displaying
+the card and hence makes the review more immersive.</p>
+<p>My current Anki decks looks like this, all decks are custom Filtered Decks,
+only the “ZTL Export” is real:</p>
+<figure>
+	<img src="cards2.png" width=500 />
+	
+	<figcaption>
+		<a href="#figure-1">Figure 1.</a>
+		Overview of Filtered Decks created from monolithic ZTL export. VdG are Viola da Gamba practice cards, Suomi are my Finnish grammar and vocabulary cards. Notice that you can also group filtered decks in an hierarchy.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h2 id="anki-provides-focus"><a class="zola-anchor" href="#anki-provides-focus" aria-label="Anchor link for: anki-provides-focus"></a>
+Anki provides focus</h2>
+<p>Learning programs, such as Anki or Supermemo, are effective because of
+their spaced-repetition approach to review. Another powerful side-effect
+I recently observed, it that they reduce distractions for me. I can open
+the deck without having to go through the trouble of finding some text
+and be visually distracted. And I only see content I have curated
+beforehand, which is an important exercise in self-awareness.</p>
+<figure>
+	<img src="cards1.png" width=500 />
+	
+	<figcaption>
+		<a href="#figure-2">Figure 2.</a>
+		Sample card from my math exercises.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h2 id="postponing-is-a-useful-feature"><a class="zola-anchor" href="#postponing-is-a-useful-feature" aria-label="Anchor link for: postponing-is-a-useful-feature"></a>
+Postponing is a useful feature</h2>
+<p>I wasn’t aware that you can “postpone”<sup class="footnote-reference"><a href="#2">2</a></sup> a card. If I’m stuck at a new
+card or somehow cheated by looking up a partial solution, I will
+just postpone until tomorrow. That sounds like an obvious thing, but it
+gives my mind some time to forget or reorder the content.</p>
+<div class="footnote-definition" id="2"><sup class="footnote-definition-label">2</sup>
+<p>Postponing brings a card up again the next day, without changing it review cycle. The shortkey for postponing is the <code>-</code> symbol.</p>
+</div>
+<p>Especially for my math exercises, I postpone until I come up with a
+solution. Then I recall for 3-4 more cycles, and finally set my
+solution to the outer note. This approach is quite heuristic, but
+works well for me.</p>
+<h2 id="combining-cards-and-notes-is-powerful"><a class="zola-anchor" href="#combining-cards-and-notes-is-powerful" aria-label="Anchor link for: combining-cards-and-notes-is-powerful"></a>
+Combining cards and notes is powerful</h2>
+<p>Embedding cards definition into the context of a note brings
+additional information for rendering the card. My simplest
+card class <code>wip</code> has no fields and just brings the note into
+view:</p>
+<pre data-lang="markdown" style="background-color:#fafafa;color:#383a42;" class="language-markdown "><code class="language-markdown" data-lang="markdown"><span style="color:#0184bc;"># i5w46d Beobachtungen eines Praktizierenden
+</span><span>
+</span><span>1. Recognition ersetzt immer noch kein Recall
+</span><span>
+</span><span>Etwas abzurufen ist der wichtige Schritt beim Lernen einer
+</span><span>Tätigkeit. Dies lässt sich durch bloßes (wieder) Erkennen nicht
+</span><span>
+</span><span>[...]
+</span><span>
+</span><span>&lt;</span><span style="color:#e45649;">card </span><span style="color:#c18401;">class</span><span>=</span><span style="color:#50a14f;">&quot;wip&quot; </span><span>/&gt;
+</span></code></pre>
+<p>Another example is a note I want to recall with clozes attached. Then a simple:</p>
+<pre data-lang="html" style="background-color:#fafafa;color:#383a42;" class="language-html "><code class="language-html" data-lang="html"><span>&lt;</span><span style="color:#e45649;">card </span><span style="color:#c18401;">class</span><span>=</span><span style="color:#50a14f;">&quot;cloze&quot; </span><span style="color:#c18401;">hide</span><span>=</span><span style="color:#50a14f;">&quot;d&quot;</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#e45649;">q</span><span>&gt;Why is the lower bound trivial?&lt;/</span><span style="color:#e45649;">q</span><span>&gt;
+</span><span>    &lt;</span><span style="color:#e45649;">tags</span><span>&gt;math::operator-norm&lt;/</span><span style="color:#e45649;">tags</span><span>&gt;
+</span><span>&lt;/</span><span style="color:#e45649;">card</span><span>&gt;
+</span></code></pre>
+<p>generates clozes for the outer note, whose relevant parts are wrapped
+in spans with <code>d</code> class:</p>
+<figure>
+	<img src="cards4.png" width=600 />
+	
+	<figcaption>
+		<a href="#figure-3">Figure 3.</a>
+		Theorem with attached clozes, the back-side will reveal the missing parts.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<h2 id="physical-skill-learning-is-still-hard"><a class="zola-anchor" href="#physical-skill-learning-is-still-hard" aria-label="Anchor link for: physical-skill-learning-is-still-hard"></a>
+Physical skill learning is still hard</h2>
+<p>Recently, I was inspired by <a href="https://old.reddit.com/r/Anki/comments/xtjqly/has_anyone_used_anki_for_physical_skills_and_has/iqrqk6g/">this</a> reddit post about the role
+of visualization in physical skill learning.</p>
+<blockquote>
+<p>I suggest making two identical decks: Salsa Mental and Salsa Physical.</p>
+<p>Use the mental deck to practice visualizing techniques. Create complete mental images of yourself doing the techniques to a salsa beat. By “complete” I mean don’t just recall what the technique “looks like”, visualize what every part of your body is doing.</p>
+<p>Use the physical deck when you have the opportunity to physically practice.</p>
+</blockquote>
+<p>For dancing I find it difficult to imagine my whole body, but instrument
+playing is more limited in scope. For each definition, I create two cards.</p>
+<p>The first provides a description what to take attention to, and optionally
+an musical context, and asks for a recording with instrument.</p>
+<p>The second provides a recording, and asks for the list to take attention
+of. This card happens without instrument by only imaging playing it.</p>
+<figure>
+	<img src="cards3.png" width=600 />
+	
+	<figcaption>
+		<a href="#figure-4">Figure 4.</a>
+		Front side of the physical card. Provides context and a metronome to play. The suggestion shows a recording of the previous section. The back-side provides a button to record, which is then again used in the mental card and the next section.
+	</figcaption>
+	<span class="border-edge" />
+	
+</figure>
+<p>Of course, spaced repetition only works with yes-no responses, and not
+continuous variables such as playing speed. For me it counts when I
+can play or imagine playing the phrase without hesitation.</p>
+
+    </div>
+
+	
+
+    
+    <div class="article-info">
+        
+        <time class="article-date" datetime="2026-07-01"> 1 July 2026</time>
+        
+        <div class="article-taxonomies">
+            
+            
+        </div>
+    </div>
+
+</article>
+
+
+<div class="responds">
+	<div class="sep">Discussion</div>
+
+	Have a suggestion or want to stay updated? Start a <a href="mailto:git@lorenzschmidt.com?subject=action%3Astartthread%20id%3A05u3i1" style="font-variant: small-caps">new thread</a> below or <a href="mailto:git@lorenzschmidt.com?subject=action%3Asubscribe" style="font-variant: small-caps">subscribe</a> by emailing me.
+
+	<div class="content">No comments yet!</div>
+</div>
+
+
+
+
+
+
+
+        </main>
+        <footer>
+			<span style="font-family: Knots;">
+				obooohohOXOBOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOXOBOXohohooob<br />
+			</span>
+            <p>
+                © 2026 - Notes and Tones <br>
+            </p>
+            <p>
+                
+                
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
