@@ -154,7 +154,7 @@ the Hessian is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"
 </p></div>
 			
 				
-<h3>Four Examples of Matrix Functions</h3>
+<h3>Three Examples of Matrix Functions</h3>
 <div id="content"><p class="noindent">We finish with three examples of matrix functions taken from the book. The
 functions take all matrices as input:
      </p><dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
